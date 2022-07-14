@@ -1,4 +1,4 @@
-name: Deploy to DigitalOcean vlad-yakovlev.dev
+name: Deploy to DigitalOcean
 
 on:
   push:
