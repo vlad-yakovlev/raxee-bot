@@ -1,5 +1,3 @@
-import path from 'path';
-
 import { FileAdapter } from '@grammyjs/storage-file';
 
 import { PokerRootState } from '../classes/PokerRootState';
@@ -11,7 +9,7 @@ export const pokerRootStateMiddleware = () => namedSession<CustomContext, 'poker
 
   getStorage: (ctx) => new FileAdapter({
     deserializer: (input) => PokerRootState.fromRaw(ctx, JSON.parse(input)),
-    dirName: path.resolve(__dirname, '../../db'),
+    dirName: 'db',
     serializer: (input) => JSON.stringify(input.toRaw()),
   }),
 

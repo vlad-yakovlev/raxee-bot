@@ -1,5 +1,3 @@
-import path from 'path';
-
 import { FileAdapter } from '@grammyjs/storage-file';
 
 import { namedSession } from '../plugins/namedSession';
@@ -16,6 +14,6 @@ export const pidorMiddleware = () => namedSession<CustomContext, 'pidorState'>({
   name: 'pidorState',
 
   storage: new FileAdapter({
-    dirName: path.resolve(__dirname, '../../db'),
+    dirName: 'db',
   }),
 });
