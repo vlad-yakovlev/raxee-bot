@@ -1,5 +1,6 @@
 import { FileAdapter } from '@grammyjs/storage-file';
 
+import { FILE_ADAPTER_DIRNAME } from '../constants/db';
 import { namedSession } from '../plugins/namedSession';
 import { CustomContext } from '../types/context';
 
@@ -14,6 +15,6 @@ export const pidorMiddleware = () => namedSession<CustomContext, 'pidorState'>({
   name: 'pidorState',
 
   storage: new FileAdapter({
-    dirName: 'db',
+    dirName: FILE_ADAPTER_DIRNAME,
   }),
 });
