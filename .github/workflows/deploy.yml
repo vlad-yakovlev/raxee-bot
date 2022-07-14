@@ -19,10 +19,9 @@ jobs:
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DO_HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.DO_SSHKEY }}
-          passphrase: ${{ secrets.DO_SSHKEYPASS }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
           script: |
             cd Projects/raxee-bot
             git pull
