@@ -1,0 +1,29 @@
+name: Deploy to DigitalOcean vlad-yakovlev.dev
+
+on:
+  push:
+    branches:
+      - master
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Image version'
+        required: true
+
+jobs:   
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          script: |
+            cd Projects/raxee-bot
+            git pull
+            docker-compose up -d --build
