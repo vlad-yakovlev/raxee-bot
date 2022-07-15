@@ -9,6 +9,7 @@ jobs:
   npm-ci:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/npm-ci
 
   lint:
@@ -16,6 +17,7 @@ jobs:
       - npm-ci
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/npm-ci
       - name: Run lint
         run: npm run lint
@@ -25,6 +27,7 @@ jobs:
       - npm-ci
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/npm-ci
       - name: Run compile
         run: npm run compile
@@ -34,6 +37,7 @@ jobs:
       - npm-ci
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/npm-ci
       - name: Run test
         run: npm run test
