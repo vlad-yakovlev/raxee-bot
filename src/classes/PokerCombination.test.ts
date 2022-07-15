@@ -1,5 +1,5 @@
 import { PokerCard } from './PokerCard';
-import { PokerCombination } from './pokerCombination';
+import { PokerCombination } from './PokerCombination';
 
 describe('#constructor', () => {
   test('should properly save level and cards', () => {
