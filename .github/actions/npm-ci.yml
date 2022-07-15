@@ -1,8 +1,6 @@
 ---
 name: Install node_modules
 
-inputs:
-
 runs:
   using: composite
   steps:
