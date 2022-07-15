@@ -6,38 +6,32 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  npm-ci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/npm-ci
-
   lint:
-    needs:
-      - npm-ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/npm-ci
-      - name: Run lint
-        run: npm run lint
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm run lint
 
   compile:
-    needs:
-      - npm-ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/npm-ci
-      - name: Run compile
-        run: npm run compile
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm run compile
 
   test:
-    needs:
-      - npm-ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/npm-ci
-      - name: Run test
-        run: npm run test
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm run test
