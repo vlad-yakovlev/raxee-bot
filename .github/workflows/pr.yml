@@ -1,0 +1,39 @@
+---
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  npm-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: vlad-yakovlev/raxee-bot/.github/workflows/npm-ci.yml@master
+
+  lint:
+    needs:
+      - npm-ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: vlad-yakovlev/raxee-bot/.github/workflows/npm-ci.yml@master
+      - name: Run lint
+        run: npm run lint
+
+  compile:
+    needs:
+      - npm-ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: vlad-yakovlev/raxee-bot/.github/workflows/npm-ci.yml@master
+      - name: Run compile
+        run: npm run compile
+
+  test:
+    needs:
+      - npm-ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: vlad-yakovlev/raxee-bot/.github/workflows/npm-ci.yml@master
+      - name: Run test
+        run: npm run test

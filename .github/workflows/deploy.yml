@@ -6,10 +6,9 @@ on:
     branches:
       - master
 
-jobs:   
+jobs:
   deploy:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@master
