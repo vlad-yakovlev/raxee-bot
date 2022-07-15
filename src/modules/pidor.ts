@@ -49,7 +49,7 @@ export const pidorModule = () => {
 
     const userMention = `${ctx.from.username ? '@' : ''}${getUserName(ctx.from)}`;
     R.forEachObj.indexed(ctx.pidorState.importedStats, (statsMention, date) => {
-      if (statsMention.replaceAll('_', '\\_') === userMention) {
+      if (statsMention === userMention) {
         ctx.pidorState.stats[date] = ctx.from.id;
       }
     });
