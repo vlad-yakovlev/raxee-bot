@@ -7,6 +7,7 @@ export interface PidorStatsMessageVariant {
 }
 
 export interface PidorState {
+  importedStats: Record<string, string>
   stats: Record<string, number>
   users: Record<number, User>
 }

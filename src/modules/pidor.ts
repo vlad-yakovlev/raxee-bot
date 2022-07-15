@@ -1,9 +1,10 @@
 import { format } from 'date-fns';
 import { Composer } from 'grammy';
+import * as R from 'remeda';
 
 import { pidorMessages } from '../constants/pidor';
 import { CustomContext } from '../types/context';
-import { asyncPause, getMessageVariant, getPidorCurrentDate, getPidorStats, getRandomItem, pickBy } from '../utils';
+import { asyncPause, getMessageVariant, getPidorCurrentDate, getPidorStats, getRandomItem, getUserName, pickBy } from '../utils';
 
 export const pidorModule = () => {
   const bot = new Composer<CustomContext>();
@@ -44,8 +45,15 @@ export const pidorModule = () => {
     }
 
     const alreadyRegistered = Boolean(ctx.pidorState.users[ctx.from.id]);
-
     ctx.pidorState.users[ctx.from.id] = ctx.from;
+
+    const userMention = `${ctx.from.username ? '@' : ''}${getUserName(ctx.from)}`;
+    R.forEachObj.indexed(ctx.pidorState.importedStats, (statsMention, date) => {
+      if (statsMention === userMention) {
+        ctx.pidorState.stats[date] = ctx.from.id;
+      }
+    });
+    ctx.pidorState.importedStats = pickBy(ctx.pidorState.importedStats, (_value, date) => !ctx.pidorState.stats[date]);
 
     await ctx.replyWithMarkdown(getMessageVariant(
       alreadyRegistered ? pidorMessages.register.duplicate : pidorMessages.register.added,

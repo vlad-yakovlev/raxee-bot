@@ -8,6 +8,7 @@ export const pidorMiddleware = () => namedSession<CustomContext, 'pidorState'>({
   getSessionKey: (ctx) => (ctx.chat?.id === undefined ? undefined : `pidor_${ctx.chat.id}`),
 
   initial: () => ({
+    importedStats: {},
     stats: {},
     users: {},
   }),
