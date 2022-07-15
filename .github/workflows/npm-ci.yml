@@ -1,8 +1,7 @@
 ---
 name: Install node_modules
 
-on:
-  workflow_call:
+inputs:
 
 runs:
   using: composite
