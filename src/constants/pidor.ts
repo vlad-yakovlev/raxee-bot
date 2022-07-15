@@ -168,13 +168,13 @@ export const pidorMessages = {
   },
 
   stats: buildPidorStatsMessageVariant({
-    row: (index, user, count) => `*${index + 1}.* ${getUserName(user)} \u2013 _${count} раз(а)_`,
+    row: (index, user, count) => `*${index + 1}.* ${getUserName(user, true)} \u2013 _${count} раз(а)_`,
     title: () => `Встречайте топовых *${getPidor(2, 2)}*:`,
     total: (count) => `Всего участников \u2013 _${count}_`,
   }),
 
   statsYear: buildPidorStatsMessageVariant({
-    row: (index, user, count) => `*${index + 1}.* ${getUserName(user)} \u2013 _${count} раз(а)_`,
+    row: (index, user, count) => `*${index + 1}.* ${getUserName(user, true)} \u2013 _${count} раз(а)_`,
     title: () => `Встречайте топовых *${getPidor(2, 2)}* этого года:`,
     total: (count) => `Всего участников \u2013 _${count}_`,
   }),
