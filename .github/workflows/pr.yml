@@ -9,14 +9,14 @@ jobs:
   npm-ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/npm-ci
+      - uses: /.github/actions/npm-ci.yml
 
   lint:
     needs:
       - npm-ci
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/npm-ci
+      - uses: /.github/actions/npm-ci.yml
       - name: Run lint
         run: npm run lint
 
@@ -25,7 +25,7 @@ jobs:
       - npm-ci
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/npm-ci
+      - uses: ./.github/actions/npm-ci.yml
       - name: Run compile
         run: npm run compile
 
@@ -34,6 +34,6 @@ jobs:
       - npm-ci
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/npm-ci
+      - uses: /.github/actions/npm-ci.yml
       - name: Run test
         run: npm run test
