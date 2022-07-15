@@ -6,12 +6,6 @@ on:
     branches:
       - master
 
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Image version'
-        required: true
-
 jobs:   
   deploy:
     runs-on: ubuntu-latest
