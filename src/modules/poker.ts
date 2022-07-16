@@ -35,7 +35,7 @@ export const pokerModule = () => {
     ctx.pokerRootState.addUserToLobby();
     ctx.pokerState.players.push(new PokerPlayer(ctx, ctx.from));
 
-    await ctx.replyWithMarkdown(pokerMessages.register.done, { reply_to_message_id: ctx.message?.message_id });
+    await ctx.replyWithMarkdown(pokerMessages.register.registered, { reply_to_message_id: ctx.message?.message_id });
   });
 
   bot.chatType(['group', 'supergroup']).command('poker_start', async (ctx) => {
@@ -50,16 +50,20 @@ export const pokerModule = () => {
     }
 
     await ctx.pokerState.dealCards();
-    await ctx.replyWithMarkdown(pokerMessages.start.done);
+    await ctx.replyWithMarkdown(pokerMessages.start.started);
   });
 
   bot.chatType(['group', 'supergroup']).command('poker_stop', async (ctx) => {
-    if (ctx.pokerState.started) {
+    const isStarted = ctx.pokerState.started;
+    await ctx.pokerState.finishGame();
+    await ctx.replyWithMarkdown(isStarted ? pokerMessages.stopGroup.stopped : pokerMessages.stopGroup.cancelled);
+  });
+
+  bot.chatType('private').command('poker_stop', async (ctx) => {
+    if (ctx.pokerRootState.lobbyByUser) {
       await ctx.pokerState.finishGame();
-      await ctx.replyWithMarkdown(pokerMessages.stop.done);
     } else {
-      await ctx.pokerState.finishGame();
-      await ctx.replyWithMarkdown(pokerMessages.stop.notStarted);
+      await ctx.replyWithMarkdown(pokerMessages.stopPrivate.notFound);
     }
   });
 

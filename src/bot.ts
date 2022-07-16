@@ -27,12 +27,12 @@ require('dotenv-flow').config();
   bot.start();
 
   await bot.api.setMyCommands([
-    { command: 'pidor', description: 'Определить пидора дня' },
-    { command: 'pidor_reg', description: 'Стать участником пидора дня' },
-    { command: 'pidor_stats', description: 'Посмотреть статистику пидора дня' },
-    { command: 'pidor_stats_year', description: 'Посмотреть статистику пидора дня за текущий год' },
-    { command: 'poker_reg', description: 'Присоединиться к игре в покер' },
-    { command: 'poker_start', description: 'Начать игру в покер' },
-    { command: 'poker_stop', description: 'Закончить игру в покер' },
+    { command: 'pidor', description: 'Определить пидора дня [group]' },
+    { command: 'pidor_reg', description: 'Стать участником пидора дня [group]' },
+    { command: 'pidor_stats', description: 'Посмотреть статистику пидора дня [group]' },
+    { command: 'pidor_stats_year', description: 'Посмотреть статистику пидора дня за текущий год [group]' },
+    { command: 'poker_reg', description: 'Присоединиться к игре в покер [group]' },
+    { command: 'poker_start', description: 'Начать игру в покер [group]' },
+    { command: 'poker_stop', description: 'Закончить игру в покер [private/group]' },
   ]);
 })();
