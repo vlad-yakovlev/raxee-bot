@@ -10,6 +10,21 @@ import { PidorState } from '../types/pidor';
 
 require('dotenv-flow').config();
 
+type MayBeArray<T> = T | T[];
+
+type TgExportMessageText = string | { text: string, type: string };
+
+interface TgExportMessage {
+  date: string
+  from_id?: string
+  text?: MayBeArray<TgExportMessageText>
+}
+
+interface TgExport {
+  id: number
+  messages: TgExportMessage[]
+}
+
 const SUBLIME_USER_ID = 232117096;
 
 const SUBLIME_TEMPLATES = [
@@ -28,7 +43,7 @@ const SUBLIME_TEMPLATES = [
   'Пидор дня обыкновенный, 1шт. - ',
 ];
 
-const readExport = async (filename: string) => {
+const readTgExport = async (filename: string): Promise<TgExport> => {
   return R.pipe(
     await fs.readFile(filename, { encoding: 'utf-8' }),
     JSON.parse,
@@ -51,16 +66,22 @@ const writeState = async (id: number, state: PidorState) => {
   await storage.write(`pidor_-${id}`, state);
 };
 
-const getMessageText = (message: any): string => {
-  if (typeof message.text === 'string') {
-    return message.text;
+const getMessageText = (message: TgExportMessage): string => {
+  if (!message.text) {
+    return '';
   }
 
-  return R.pipe(
-    message.text,
-    R.map((item: any) => item.text ?? item),
-    (items: any[]) => items.join(''),
-  );
+  const textToString = (text: TgExportMessageText) => (typeof text === 'string' ? text : text.text);
+
+  if (Array.isArray(message.text)) {
+    return R.pipe(
+      message.text,
+      R.map(textToString),
+      (items) => items.join(''),
+    );
+  }
+
+  return textToString(message.text);
 };
 
 (async () => {
@@ -81,10 +102,10 @@ const getMessageText = (message: any): string => {
     throw new Error('Incorrect arguments');
   }
 
-  const tgExport = await readExport(cli.input[0]);
+  const tgExport = await readTgExport(cli.input[0]);
   const state = await readState(tgExport.id);
 
-  tgExport.messages.forEach((message: any) => {
+  tgExport.messages.forEach((message) => {
     if (Number(message.from_id?.slice(4)) === SUBLIME_USER_ID) {
       const text = getMessageText(message);
 
