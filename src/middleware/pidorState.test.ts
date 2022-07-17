@@ -1,6 +1,5 @@
 import { FileAdapter } from '@grammyjs/storage-file';
 
-import { FILE_ADAPTER_DIRNAME } from '../constants/db';
 import { CustomContext } from '../types/context';
 
 import { pidorStateMiddleware } from './pidorState';
@@ -24,7 +23,7 @@ test('pidorState', async () => {
 
   await pidorStateMiddleware()(ctx, next);
 
-  expect(FileAdapter).toBeCalledWith({ dirName: FILE_ADAPTER_DIRNAME });
+  expect(FileAdapter).toBeCalled();
   expect(FileAdapter.prototype.read).toBeCalledWith('pidor_12345');
   expect(FileAdapter.prototype.write).toBeCalledWith('pidor_12345', ctx.pidorState);
   expect(next).toBeCalled();
