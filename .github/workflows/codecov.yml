@@ -1,5 +1,5 @@
 ---
-name: Coverage
+name: Codecov
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   pull_request:
 
 jobs:
-  coverage:
+  codecov:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
