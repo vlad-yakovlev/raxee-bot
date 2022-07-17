@@ -1,6 +1,3 @@
-import { FileAdapter } from '@grammyjs/storage-file';
-
-import { PokerState } from '../classes/PokerState';
 import { CustomContext } from '../types/context';
 
 import { pokerStateMiddleware } from './pokerState';
@@ -8,10 +5,11 @@ import { pokerStateMiddleware } from './pokerState';
 jest.mock('@grammyjs/storage-file');
 jest.mock('../classes/PokerState');
 
+const { FileAdapter } = jest.requireMock('@grammyjs/storage-file');
+const { PokerState } = jest.requireMock('../classes/PokerState');
+
 beforeEach(() => {
-  // @ts-expect-error
   FileAdapter.mockClear();
-  // @ts-expect-error
   PokerState.mockClear();
 });
 
@@ -37,10 +35,8 @@ test('pokerState deserializer', async () => {
 
   const state = new PokerState(ctx);
 
-  // @ts-expect-error
   const deserializer = FileAdapter.mock.calls[0][0].deserializer;
 
-  // @ts-expect-error
   PokerState.fromRaw.mockImplementation(() => state);
 
   expect(deserializer('{"foo":"bar"}')).toBe(state);
@@ -55,10 +51,8 @@ test('pokerState serializer', async () => {
 
   const state = new PokerState(ctx);
 
-  // @ts-expect-error
   const serializer = FileAdapter.mock.calls[0][0].serializer;
 
-  // @ts-expect-error
   state.toRaw.mockImplementation(() => ({ foo: 'bar' }));
 
   expect(serializer(state)).toBe('{"foo":"bar"}');

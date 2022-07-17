@@ -1,13 +1,12 @@
-import { FileAdapter } from '@grammyjs/storage-file';
-
 import { CustomContext } from '../types/context';
 
 import { pidorStateMiddleware } from './pidorState';
 
 jest.mock('@grammyjs/storage-file');
 
+const { FileAdapter } = jest.requireMock('@grammyjs/storage-file');
+
 beforeEach(() => {
-  // @ts-expect-error
   FileAdapter.mockClear();
 });
 

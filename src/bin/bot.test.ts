@@ -1,12 +1,3 @@
-import { Bot } from 'grammy';
-
-import { pidorStateMiddleware } from '../middleware/pidorState';
-import { pokerRootStateMiddleware } from '../middleware/pokerRootState';
-import { pokerStateMiddleware } from '../middleware/pokerState';
-import { pidorModule } from '../modules/pidor';
-import { pokerModule } from '../modules/poker';
-import { voiceModule } from '../modules/voice';
-import { replyWithMarkdownPlugin } from '../plugins/replyWithMarkdown';
 import { handleError } from '../utils/handleError';
 
 import { runBot } from './bot';
@@ -20,43 +11,36 @@ jest.mock('../modules/poker');
 jest.mock('../modules/voice');
 jest.mock('../plugins/replyWithMarkdown');
 
+const { Bot } = jest.requireMock('grammy');
+const { pidorStateMiddleware } = jest.requireMock('../middleware/pidorState');
+const { pokerRootStateMiddleware } = jest.requireMock('../middleware/pokerRootState');
+const { pokerStateMiddleware } = jest.requireMock('../middleware/pokerState');
+const { pidorModule } = jest.requireMock('../modules/pidor');
+const { pokerModule } = jest.requireMock('../modules/poker');
+const { voiceModule } = jest.requireMock('../modules/voice');
+const { replyWithMarkdownPlugin } = jest.requireMock('../plugins/replyWithMarkdown');
+
 beforeEach(() => {
-  // @ts-expect-error
   Bot.mockClear();
-  // @ts-expect-error
   pidorStateMiddleware.mockClear();
-  // @ts-expect-error
   pokerRootStateMiddleware.mockClear();
-  // @ts-expect-error
   pokerStateMiddleware.mockClear();
-  // @ts-expect-error
   pidorModule.mockClear();
-  // @ts-expect-error
   pokerModule.mockClear();
-  // @ts-expect-error
   voiceModule.mockClear();
-  // @ts-expect-error
   replyWithMarkdownPlugin.mockClear();
 
   process.env.BOT_TOKEN = 'test-bot-token';
 });
 
 test('run', async () => {
-  // @ts-expect-error
   Bot.prototype.api = { setMyCommands: jest.fn() };
-  // @ts-expect-error
   pidorStateMiddleware.mockImplementation(() => 'pidorStateMiddleware');
-  // @ts-expect-error
   pokerRootStateMiddleware.mockImplementation(() => 'pokerRootStateMiddleware');
-  // @ts-expect-error
   pokerStateMiddleware.mockImplementation(() => 'pokerStateMiddleware');
-  // @ts-expect-error
   pidorModule.mockImplementation(() => 'pidorModule');
-  // @ts-expect-error
   pokerModule.mockImplementation(() => 'pokerModule');
-  // @ts-expect-error
   voiceModule.mockImplementation(() => 'voiceModule');
-  // @ts-expect-error
   replyWithMarkdownPlugin.mockImplementation(() => 'replyWithMarkdownPlugin');
 
   await runBot();
