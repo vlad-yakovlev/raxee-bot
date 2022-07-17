@@ -8,6 +8,7 @@
     "compile": "tsc -p ./tsconfig.json --noEmit",
     "lint": "eslint --ext .js,.ts --ignore-path .eslintignore .",
     "test": "jest --coverage",
+    "test:ci": "jest",
     "sublime-importer": "ts-node src/bin/sublime-importer.ts"
   },
   "dependencies": {
