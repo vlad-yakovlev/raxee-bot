@@ -6,6 +6,7 @@ import { CustomContext } from '../types/context';
 
 export const pidorMiddleware = () => namedSession<CustomContext, 'pidorState'>({
   getSessionKey: (ctx) => (ctx.chat?.id === undefined ? undefined : `pidor_${ctx.chat.id}`),
+  getStorage: () => new FileAdapter({ dirName: FILE_ADAPTER_DIRNAME }),
 
   initial: () => ({
     importedStats: {},
@@ -14,8 +15,4 @@ export const pidorMiddleware = () => namedSession<CustomContext, 'pidorState'>({
   }),
 
   name: 'pidorState',
-
-  storage: new FileAdapter({
-    dirName: FILE_ADAPTER_DIRNAME,
-  }),
 });

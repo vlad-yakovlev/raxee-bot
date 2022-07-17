@@ -1,40 +1,32 @@
-import { Context, MemorySessionStorage, MiddlewareFn, StorageAdapter } from 'grammy';
+import { Context, MiddlewareFn, StorageAdapter } from 'grammy';
 
 type MaybePromise<T> = Promise<T> | T;
 
 interface NamedSessionOptions<C extends Context, K extends keyof C> {
-  name: K
+  getSessionKey: (ctx: C) => MaybePromise<string | undefined>
+  getStorage: (ctx: C) => StorageAdapter<C[K]>
   initial: (ctx: C) => C[K]
-  getSessionKey?: (ctx: C) => MaybePromise<string | undefined>
-  getStorage?: (ctx: C) => StorageAdapter<C[K]>
-  storage?: StorageAdapter<C[K]>
+  name: K
 }
 
 export const namedSession = <C extends Context, K extends keyof C>(options: NamedSessionOptions<C, K>): MiddlewareFn<C> => {
-  const getSessionKey = options.getSessionKey ?? ((ctx) => ctx.chat?.id.toString());
-  const getStorage = options.getStorage ?? (() => options.storage ?? new MemorySessionStorage());
-
   return async (ctx, next) => {
-    const key = await getSessionKey(ctx);
+    const key = await options.getSessionKey(ctx);
 
     if (key === undefined) {
-      const reason = options.getSessionKey
-        ? 'the custom `getSessionKey` function returned undefined for this update'
-        : 'this update does not belong to a chat, so the session key is undefined';
-
       Object.defineProperty(ctx, options.name, {
         enumerable: true,
         get() {
-          throw new Error(`Cannot access session data because ${reason}!`);
+          throw new Error('Cannot access session data because the `getSessionKey` returned undefined');
         },
         set() {
-          throw new Error(`Cannot assign session data because ${reason}!`);
+          throw new Error('Cannot assign session data because the `getSessionKey` returned undefined');
         },
       });
 
       await next();
     } else {
-      const storage = getStorage(ctx);
+      const storage = options.getStorage(ctx);
       ctx[options.name] = (await storage.read(key)) ?? options.initial(ctx);
       await next();
       await storage.write(key, ctx[options.name]);
