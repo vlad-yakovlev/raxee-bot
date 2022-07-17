@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as fs from 'fs/promises';
 import * as URL from 'url';
 
@@ -129,6 +128,7 @@ const getMessageText = (message: TgExportMessage): string => {
     process.exit(0);
   })
   .catch((err) => {
+    // eslint-disable-next-line no-console
     console.error(err);
     process.exit(1);
   });

@@ -14,17 +14,6 @@ require('dotenv-flow').config();
 
 (async () => {
   const bot = new Bot<CustomContext>(process.env.BOT_TOKEN!);
-  bot.use(
-    replyWithMarkdownPlugin(),
-    pidorStateMiddleware(),
-    pokerRootStateMiddleware(),
-    pokerStateMiddleware(),
-    pidorModule(),
-    pokerModule(),
-    voiceModule(),
-  );
-  bot.catch(handleError);
-  bot.start();
 
   await bot.api.setMyCommands([
     { command: 'pidor', description: 'Определить пидора дня [group]' },
@@ -35,4 +24,26 @@ require('dotenv-flow').config();
     { command: 'poker_start', description: 'Начать игру в покер [group]' },
     { command: 'poker_stop', description: 'Закончить игру в покер [private/group]' },
   ]);
-})();
+
+  bot.use(
+    replyWithMarkdownPlugin(),
+    pidorStateMiddleware(),
+    pokerRootStateMiddleware(),
+    pokerStateMiddleware(),
+    pidorModule(),
+    pokerModule(),
+    voiceModule(),
+  );
+
+  bot.catch(handleError);
+
+  await bot.start();
+})()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((err) => {
+    // eslint-disable-next-line no-console
+    console.error(err);
+    process.exit(1);
+  });
