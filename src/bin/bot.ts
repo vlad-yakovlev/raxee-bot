@@ -1,6 +1,6 @@
 import { Bot } from 'grammy';
 
-import { pidorMiddleware } from '../middleware/pidorState';
+import { pidorStateMiddleware } from '../middleware/pidorState';
 import { pokerRootStateMiddleware } from '../middleware/pokerRootState';
 import { pokerStateMiddleware } from '../middleware/pokerState';
 import { pidorModule } from '../modules/pidor';
@@ -16,7 +16,7 @@ require('dotenv-flow').config();
   const bot = new Bot<CustomContext>(process.env.BOT_TOKEN!);
   bot.use(
     replyWithMarkdownPlugin(),
-    pidorMiddleware(),
+    pidorStateMiddleware(),
     pokerRootStateMiddleware(),
     pokerStateMiddleware(),
     pidorModule(),
