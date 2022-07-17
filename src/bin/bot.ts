@@ -10,9 +10,7 @@ import { replyWithMarkdownPlugin } from '../plugins/replyWithMarkdown';
 import { CustomContext } from '../types/context';
 import { handleError } from '../utils/index';
 
-require('dotenv-flow').config();
-
-(async () => {
+export const runBot = async () => {
   const bot = new Bot<CustomContext>(process.env.BOT_TOKEN!);
 
   await bot.api.setMyCommands([
@@ -38,12 +36,20 @@ require('dotenv-flow').config();
   bot.catch(handleError);
 
   await bot.start();
-})()
-  .then(() => {
-    process.exit(0);
-  })
-  .catch((err) => {
-    // eslint-disable-next-line no-console
-    console.error(err);
-    process.exit(1);
-  });
+};
+
+/* istanbul ignore next */
+if (require.main === module) {
+  // eslint-disable-next-line global-require
+  require('dotenv-flow').config();
+
+  runBot()
+    .then(() => {
+      process.exit(0);
+    })
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error(err);
+      process.exit(1);
+    });
+}

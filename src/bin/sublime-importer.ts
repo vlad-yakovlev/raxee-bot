@@ -1,13 +1,10 @@
 import * as fs from 'fs/promises';
-import * as URL from 'url';
 
 import { FileAdapter } from '@grammyjs/storage-file';
 import * as R from 'remeda';
 
 import { FILE_ADAPTER_DIRNAME } from '../constants/db';
 import { PidorState } from '../types/pidor';
-
-require('dotenv-flow').config();
 
 type MayBeArray<T> = T | T[];
 
@@ -83,25 +80,8 @@ const getMessageText = (message: TgExportMessage): string => {
   return textToString(message.text);
 };
 
-(async () => {
-  const meow = (await import('meow')).default;
-
-  const cli = meow(
-    [
-      'Usage',
-      '  $ npm run sublime-importer <telegram chat export json>',
-    ].join('\n'),
-    {
-      importMeta: { url: URL.pathToFileURL(__filename).href },
-    },
-  );
-
-  if (cli.input.length !== 1) {
-    cli.showHelp();
-    throw new Error('Incorrect arguments');
-  }
-
-  const tgExport = await readTgExport(cli.input[0]);
+export const runSublimeImporter = async (fileName: string) => {
+  const tgExport = await readTgExport(fileName);
   const state = await readState(tgExport.id);
 
   tgExport.messages.forEach((message) => {
@@ -123,12 +103,26 @@ const getMessageText = (message: TgExportMessage): string => {
   });
 
   await writeState(tgExport.id, state);
-})()
-  .then(() => {
-    process.exit(0);
-  })
-  .catch((err) => {
+};
+
+/* istanbul ignore next */
+if (require.main === module) {
+  // eslint-disable-next-line global-require
+  require('dotenv-flow').config();
+
+  if (process.argv.length !== 3) {
     // eslint-disable-next-line no-console
-    console.error(err);
+    console.log('Usage:\n$ npm run sublime-importer <telegram chat export json>');
     process.exit(1);
-  });
+  }
+
+  runSublimeImporter(process.argv[2])
+    .then(() => {
+      process.exit(0);
+    })
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error(err);
+      process.exit(1);
+    });
+}
