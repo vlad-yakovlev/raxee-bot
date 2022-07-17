@@ -6,6 +6,8 @@ import { namedSession } from '../plugins/namedSession';
 import { CustomContext } from '../types/context';
 
 export const pokerStateMiddleware = () => namedSession<CustomContext, 'pokerState'>({
+  getInitial: (ctx) => new PokerState(ctx),
+
   getSessionKey: (ctx) => {
     const lobbyId = ctx.pokerRootState.lobby?.id;
     return lobbyId === undefined ? undefined : `poker_${lobbyId}`;
@@ -17,6 +19,5 @@ export const pokerStateMiddleware = () => namedSession<CustomContext, 'pokerStat
     serializer: (input) => JSON.stringify(input.toRaw()),
   }),
 
-  initial: (ctx) => new PokerState(ctx),
   name: 'pokerState',
 });

@@ -3,9 +3,9 @@ import { Context, MiddlewareFn, StorageAdapter } from 'grammy';
 type MaybePromise<T> = Promise<T> | T;
 
 interface NamedSessionOptions<C extends Context, K extends keyof C> {
+  getInitial: (ctx: C) => MaybePromise<C[K]>
   getSessionKey: (ctx: C) => MaybePromise<string | undefined>
-  getStorage: (ctx: C) => StorageAdapter<C[K]>
-  initial: (ctx: C) => C[K]
+  getStorage: (ctx: C) => MaybePromise<StorageAdapter<C[K]>>
   name: K
 }
 
@@ -26,8 +26,8 @@ export const namedSession = <C extends Context, K extends keyof C>(options: Name
 
       await next();
     } else {
-      const storage = options.getStorage(ctx);
-      ctx[options.name] = (await storage.read(key)) ?? options.initial(ctx);
+      const storage = await options.getStorage(ctx);
+      ctx[options.name] = (await storage.read(key)) ?? (await options.getInitial(ctx));
       await next();
       await storage.write(key, ctx[options.name]);
     }

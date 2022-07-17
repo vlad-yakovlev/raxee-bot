@@ -6,6 +6,7 @@ import { namedSession } from '../plugins/namedSession';
 import { CustomContext } from '../types/context';
 
 export const pokerRootStateMiddleware = () => namedSession<CustomContext, 'pokerRootState'>({
+  getInitial: (ctx) => new PokerRootState(ctx),
   getSessionKey: () => 'poker_root',
 
   getStorage: (ctx) => new FileAdapter({
@@ -14,6 +15,5 @@ export const pokerRootStateMiddleware = () => namedSession<CustomContext, 'poker
     serializer: (input) => JSON.stringify(input.toRaw()),
   }),
 
-  initial: (ctx) => new PokerRootState(ctx),
   name: 'pokerRootState',
 });
