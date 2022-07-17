@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,7 +19,7 @@ jobs:
       - name: Lint
         run: npm run lint
 
-  test:
+  compile:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
