@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -54,7 +54,7 @@ jobs:
       - lint
       - compile
       - test
-    if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/master'
+    if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Digital Ocean droplet via SSH action
