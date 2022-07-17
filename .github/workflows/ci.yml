@@ -1,5 +1,5 @@
 ---
-name: Deploy to DigitalOcean
+name: CI
 
 on:
   push:
