@@ -80,8 +80,8 @@ const getMessageText = (message: TgExportMessage): string => {
   return textToString(message.text);
 };
 
-export const runSublimeImporter = async (fileName: string) => {
-  const tgExport = await readTgExport(fileName);
+export const runSublimeImporter = async (filename: string) => {
+  const tgExport = await readTgExport(filename);
   const state = await readState(tgExport.id);
 
   tgExport.messages.forEach((message) => {
