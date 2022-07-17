@@ -53,6 +53,9 @@
       "src/**/*.tsx",
       "src/**/*.ts"
     ],
+    "coveragePathIgnorePatterns": [
+      "/src/constants/"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
