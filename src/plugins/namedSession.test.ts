@@ -71,6 +71,9 @@ test('should throw access error when key is undefined', async () => {
   })(ctx, async () => {
     expect(() => ctx.test).toThrow(new Error('Cannot access session data because the `getSessionKey` returned undefined'));
   });
+
+  expect(getInitial).not.toBeCalled();
+  expect(getStorage).not.toBeCalled();
 });
 
 test('should throw assign error when key is undefined', async () => {
@@ -93,6 +96,9 @@ test('should throw assign error when key is undefined', async () => {
   })(ctx, async () => {
     expect(() => { ctx.test = {}; }).toThrow(new Error('Cannot assign session data because the `getSessionKey` returned undefined'));
   });
+
+  expect(getInitial).not.toBeCalled();
+  expect(getStorage).not.toBeCalled();
 });
 
 test('should return value from storage', async () => {
@@ -116,6 +122,7 @@ test('should return value from storage', async () => {
     expect(ctx.test).toStrictEqual({ lol: 'kek' });
   });
 
+  expect(getInitial).not.toBeCalled();
   expect(storage.read).toBeCalledWith('foo');
   expect(storage.write).toBeCalledWith('foo', { lol: 'kek' });
 });
