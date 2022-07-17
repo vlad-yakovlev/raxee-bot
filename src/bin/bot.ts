@@ -1,14 +1,14 @@
 import { Bot } from 'grammy';
 
-import { pidorMiddleware } from './middleware/pidorState';
-import { pokerRootStateMiddleware } from './middleware/pokerRootState';
-import { pokerStateMiddleware } from './middleware/pokerState';
-import { pidorModule } from './modules/pidor';
-import { pokerModule } from './modules/poker';
-import { voiceModule } from './modules/voice';
-import { replyWithMarkdownPlugin } from './plugins/replyWithMarkdown';
-import { CustomContext } from './types/context';
-import { handleError } from './utils';
+import { pidorMiddleware } from '../middleware/pidorState';
+import { pokerRootStateMiddleware } from '../middleware/pokerRootState';
+import { pokerStateMiddleware } from '../middleware/pokerState';
+import { pidorModule } from '../modules/pidor';
+import { pokerModule } from '../modules/poker';
+import { voiceModule } from '../modules/voice';
+import { replyWithMarkdownPlugin } from '../plugins/replyWithMarkdown';
+import { CustomContext } from '../types/context';
+import { handleError } from '../utils/index';
 
 require('dotenv-flow').config();
 

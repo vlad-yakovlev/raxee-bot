@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "ts-node src/bot.ts",
+    "start": "ts-node src/bin/bot.ts",
     "prepare": "husky install",
     "compile": "tsc -p ./tsconfig.json --noEmit",
     "lint": "eslint --ext .js,.ts --ignore-path .eslintignore .",
