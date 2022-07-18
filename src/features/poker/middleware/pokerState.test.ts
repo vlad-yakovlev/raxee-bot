@@ -22,7 +22,7 @@ test('pokerState', async () => {
   expect(FileAdapter).toBeCalledWith(expect.objectContaining({ dirName: 'some-path' }));
   expect(FileAdapter.prototype.read).toBeCalledWith('poker_12345');
   expect(FileAdapter.prototype.write).toBeCalledWith('poker_12345', ctx.pokerState);
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });
 
 test('pokerState deserializer', async () => {
@@ -66,5 +66,5 @@ test('pokerState without lobbyId', async () => {
   await pokerStateMiddleware('some-path')(ctx, next);
 
   expect(FileAdapter).not.toBeCalled();
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });

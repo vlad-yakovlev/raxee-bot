@@ -23,7 +23,7 @@ test('pidorState', async () => {
   expect(FileAdapter).toBeCalledWith({ dirName: 'some-path' });
   expect(FileAdapter.prototype.read).toBeCalledWith('pidor_12345');
   expect(FileAdapter.prototype.write).toBeCalledWith('pidor_12345', ctx.pidorState);
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });
 
 test('pidorState without chatId', async () => {
@@ -35,5 +35,5 @@ test('pidorState without chatId', async () => {
   await pidorStateMiddleware('some-path')(ctx, next);
 
   expect(FileAdapter).not.toBeCalled();
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });

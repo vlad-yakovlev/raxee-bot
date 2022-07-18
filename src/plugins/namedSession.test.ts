@@ -24,7 +24,7 @@ test('should call next', async () => {
   })(ctx, next);
 
   expect(ctx).toHaveProperty('test');
-  expect(next).toBeCalled(); // TODO: test that async was used
+  expect(next).toBeCalledWith(); // TODO: test that async was used
 });
 
 test('should pass ctx', async () => {
@@ -51,7 +51,7 @@ test('should pass ctx', async () => {
   expect(getInitial).toBeCalledWith(ctx);
   expect(getSessionKey).toBeCalledWith(ctx);
   expect(getStorage).toBeCalledWith(ctx);
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });
 
 test('should throw access error when key is undefined', async () => {
@@ -79,7 +79,7 @@ test('should throw access error when key is undefined', async () => {
 
   expect(getInitial).not.toBeCalled();
   expect(getStorage).not.toBeCalled();
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });
 
 test('should throw assign error when key is undefined', async () => {
@@ -107,7 +107,7 @@ test('should throw assign error when key is undefined', async () => {
 
   expect(getInitial).not.toBeCalled();
   expect(getStorage).not.toBeCalled();
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });
 
 test('should return value from storage', async () => {
@@ -136,7 +136,7 @@ test('should return value from storage', async () => {
   expect(getInitial).not.toBeCalled();
   expect(storage.read).toBeCalledWith('foo');
   expect(storage.write).toBeCalledWith('foo', { lol: 'kek' });
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });
 
 test('should return initial', async () => {
@@ -164,7 +164,7 @@ test('should return initial', async () => {
 
   expect(storage.read).toBeCalledWith('foo');
   expect(storage.write).toBeCalledWith('foo', { wow: 'yolo' });
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });
 
 test('should write changed value to storage', async () => {
@@ -192,7 +192,7 @@ test('should write changed value to storage', async () => {
 
   expect(storage.read).toBeCalledWith('foo');
   expect(storage.write).toBeCalledWith('foo', { abc: 'def' });
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });
 
 test('should write deeply changed value to storage', async () => {
@@ -220,5 +220,5 @@ test('should write deeply changed value to storage', async () => {
 
   expect(storage.read).toBeCalledWith('foo');
   expect(storage.write).toBeCalledWith('foo', { abc: 'def', lol: 'kek' });
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });

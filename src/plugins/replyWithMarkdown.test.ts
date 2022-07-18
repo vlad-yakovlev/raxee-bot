@@ -9,7 +9,7 @@ test('should set ctx.replyWithMarkdown and call next', async () => {
   await replyWithMarkdownPlugin()(ctx, next);
 
   expect(ctx.replyWithMarkdown).toBeInstanceOf(Function);
-  expect(next).toBeCalled(); // TODO: test that async was used
+  expect(next).toBeCalledWith(); // TODO: test that async was used
 });
 
 test('should run correctly when only text presented', async () => {

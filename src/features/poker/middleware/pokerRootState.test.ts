@@ -22,7 +22,7 @@ test('pokerRootState', async () => {
   expect(FileAdapter).toBeCalledWith(expect.objectContaining({ dirName: 'some-path' }));
   expect(FileAdapter.prototype.read).toBeCalledWith('poker_root');
   expect(FileAdapter.prototype.write).toBeCalledWith('poker_root', ctx.pokerRootState);
-  expect(next).toBeCalled();
+  expect(next).toBeCalledWith();
 });
 
 test('pokerRootState deserializer', async () => {
