@@ -21,9 +21,9 @@ beforeEach(() => {
 
 test('run', async () => {
   Bot.prototype.api = { setMyCommands: jest.fn() };
-  pidorModule.mockImplementation(() => 'pidorModule');
-  pokerModule.mockImplementation(() => 'pokerModule');
-  voiceModule.mockImplementation(() => 'voiceModule');
+  pidorModule.mockReturnValue('pidorModule');
+  pokerModule.mockReturnValue('pokerModule');
+  voiceModule.mockReturnValue('voiceModule');
 
   await runBot({
     botToken: 'test-bot-token',
