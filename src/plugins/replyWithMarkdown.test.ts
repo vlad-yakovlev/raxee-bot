@@ -19,7 +19,7 @@ test('should run correctly when only text presented', async () => {
   await replyWithMarkdownPlugin()(ctx, next);
   await ctx.replyWithMarkdown('text');
 
-  expect(ctx.reply).toBeCalledWith('text', { parse_mode: 'Markdown' }, undefined);
+  expect(ctx.reply).toBeCalledWith('text', { parse_mode: 'MarkdownV2' }, undefined);
 });
 
 test('should pass arguments to ctx.reply', async () => {
@@ -30,5 +30,5 @@ test('should pass arguments to ctx.reply', async () => {
   await replyWithMarkdownPlugin()(ctx, next);
   await ctx.replyWithMarkdown('text', { reply_markup: { keyboard: [] } }, signal);
 
-  expect(ctx.reply).toBeCalledWith('text', { parse_mode: 'Markdown', reply_markup: { keyboard: [] } }, signal);
+  expect(ctx.reply).toBeCalledWith('text', { parse_mode: 'MarkdownV2', reply_markup: { keyboard: [] } }, signal);
 });

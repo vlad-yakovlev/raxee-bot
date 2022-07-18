@@ -4,10 +4,10 @@ import { User } from 'grammy/out/platform.node';
 import { getMention } from '../../utils/getMention';
 import { getUserName } from '../../utils/getUserName';
 
-import { buildMessageStatsVariant } from './utils/buildMessageStatsVariant';
 import { buildMessageVariants } from './utils/buildMessageVariants';
 import { getDayString } from './utils/getDayString';
 import { getPidorString } from './utils/getPidorString';
+import { StatsItem } from './utils/getStatsItems';
 
 export const pidorMessages = {
   _: {
@@ -122,15 +122,15 @@ export const pidorMessages = {
     ]),
   },
 
-  stats: buildMessageStatsVariant({
-    row: (index, user, count) => `*${index + 1}.* ${getUserName(user, true)} \u2013 _${count} раз(а)_`,
-    title: () => `Встречайте топовых *${getPidorString(2, 2)}*:`,
-    total: (count) => `Всего участников \u2013 _${count}_`,
-  }),
+  stats: (items: StatsItem[], usersCount: number) => [
+    `Встречайте топовых *${getPidorString(2, 2)}*:`,
+    items.map((item) => `1. ${getUserName(item.user, true)} \u2013 _${item.count} раз(а)_`).join('\n'),
+    `Всего участников \u2013 _${usersCount}_`,
+  ].join('\n\n'),
 
-  statsYear: buildMessageStatsVariant({
-    row: (index, user, count) => `*${index + 1}.* ${getUserName(user, true)} \u2013 _${count} раз(а)_`,
-    title: () => `Встречайте топовых *${getPidorString(2, 2)}* этого года:`,
-    total: (count) => `Всего участников \u2013 _${count}_`,
-  }),
+  statsYear: (items: StatsItem[], usersCount: number) => [
+    `Встречайте топовых *${getPidorString(2, 2)}* этого года:`,
+    items.map((item) => `1. ${getUserName(item.user, true)} \u2013 _${item.count} раз(а)_`).join('\n'),
+    `Всего участников \u2013 _${usersCount}_`,
+  ].join('\n\n'),
 };

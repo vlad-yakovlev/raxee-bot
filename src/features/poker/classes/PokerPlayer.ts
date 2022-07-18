@@ -112,7 +112,7 @@ export class PokerPlayer {
       this.user.id,
       message,
       {
-        parse_mode: 'Markdown',
+        parse_mode: 'MarkdownV2',
         ...withKeyboard && { reply_markup: { keyboard: this.keyboard } },
       },
     );
