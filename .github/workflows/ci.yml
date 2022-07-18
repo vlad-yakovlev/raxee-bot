@@ -8,13 +8,14 @@ on:
 
 jobs:
   checks:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         check:
           - lint
           - compile
           - test:ci
+    name: ${{ matrix.check }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
