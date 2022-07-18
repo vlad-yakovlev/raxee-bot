@@ -1,5 +1,3 @@
-import { MiddlewareFn } from 'grammy';
-
 import { voiceModule } from './module';
 
 jest.mock('grammy');
@@ -33,22 +31,14 @@ test('should reply with sticker when Math.random less than 0.5', async () => {
 test('should not reply when Math.random more than 0.5', async () => {
   jest.spyOn(global.Math, 'random').mockReturnValue(0.7);
 
-  let cb!: MiddlewareFn;
-
-  Composer.prototype.on.mockImplementation((filter: string, ...middleware: MiddlewareFn[]) => {
-    expect(filter).toBe('message:voice');
-    expect(middleware.length).toBe(1);
-    expect(middleware[0]).toBeInstanceOf(Function);
-    cb = middleware[0];
-  });
-
   expect(voiceModule()).toBeInstanceOf(Composer);
   expect(Composer).toBeCalledWith();
+  expect(Composer.prototype.on).toBeCalledWith('message:voice', expect.any(Function));
 
   const ctx = { replyWithSticker: jest.fn() } as any;
   const next = jest.fn();
 
-  await cb(ctx, next);
+  await Composer.prototype.on.mock.calls[0][1](ctx, next);
 
   expect(ctx.replyWithSticker).not.toBeCalled();
   expect(next).toBeCalledWith();
