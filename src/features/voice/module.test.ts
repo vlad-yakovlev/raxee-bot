@@ -17,22 +17,14 @@ afterEach(() => {
 test('should reply with sticker when Math.random less than 0.5', async () => {
   jest.spyOn(global.Math, 'random').mockReturnValue(0.3);
 
-  let cb!: MiddlewareFn;
-
-  Composer.prototype.on.mockImplementation((filter: string, ...middleware: MiddlewareFn[]) => {
-    expect(filter).toBe('message:voice');
-    expect(middleware.length).toBe(1);
-    expect(middleware[0]).toBeInstanceOf(Function);
-    cb = middleware[0];
-  });
-
   expect(voiceModule()).toBeInstanceOf(Composer);
   expect(Composer).toBeCalledWith();
+  expect(Composer.prototype.on).toBeCalledWith('message:voice', expect.any(Function));
 
   const ctx = { replyWithSticker: jest.fn() } as any;
   const next = jest.fn();
 
-  await cb(ctx, next);
+  await Composer.prototype.on.mock.calls[0][1](ctx, next);
 
   expect(ctx.replyWithSticker).toBeCalledWith('CAACAgIAAxkBAAEV1F1iyfQL8tS-lOMH8CFUKbo7oWispgACBQgAAhUp-UqUfZ4xg7K-CSkE');
   expect(next).toBeCalledWith();
