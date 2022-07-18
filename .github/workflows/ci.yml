@@ -29,8 +29,7 @@ jobs:
         run: npm run ${{ matrix.check }}
 
   deploy:
-    needs:
-      - checks
+    needs: checks
     if: github.repository == 'vlad-yakovlev/raxee-bot' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
