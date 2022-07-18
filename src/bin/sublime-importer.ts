@@ -3,8 +3,7 @@ import * as fs from 'fs/promises';
 import { FileAdapter } from '@grammyjs/storage-file';
 import * as R from 'remeda';
 
-import { FILE_ADAPTER_DIRNAME } from '../constants/db';
-import { PidorState } from '../types/pidor';
+import { PidorState } from '../features/pidor/types';
 
 type MayBeArray<T> = T | T[];
 
@@ -48,7 +47,7 @@ const readTgExport = async (filename: string): Promise<TgExport> => {
 
 const readState = async (id: number): Promise<PidorState> => {
   const storage = new FileAdapter<PidorState>({
-    dirName: FILE_ADAPTER_DIRNAME,
+    dirName: 'db/v1',
   });
 
   return await storage.read(`pidor_-${id}`) || { importedStats: {}, stats: {}, users: {} };
@@ -56,7 +55,7 @@ const readState = async (id: number): Promise<PidorState> => {
 
 const writeState = async (id: number, state: PidorState) => {
   const storage = new FileAdapter<PidorState>({
-    dirName: FILE_ADAPTER_DIRNAME,
+    dirName: 'db/v1',
   });
 
   await storage.write(`pidor_-${id}`, state);
