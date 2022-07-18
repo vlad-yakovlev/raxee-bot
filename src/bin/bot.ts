@@ -1,17 +1,17 @@
 import { Bot } from 'grammy';
 
-import { pidorStateMiddleware } from '../middleware/pidorState';
-import { pokerRootStateMiddleware } from '../middleware/pokerRootState';
-import { pokerStateMiddleware } from '../middleware/pokerState';
-import { pidorModule } from '../modules/pidor';
-import { pokerModule } from '../modules/poker';
-import { voiceModule } from '../modules/voice';
-import { replyWithMarkdownPlugin } from '../plugins/replyWithMarkdown';
-import { CustomContext } from '../types/context';
-import { handleError } from '../utils/index';
+import { pidorModule } from '../features/pidor/module';
+import { pokerModule } from '../features/poker/module';
+import { voiceModule } from '../features/voice/module';
+import { handleError } from '../utils/handleError';
 
-export const runBot = async () => {
-  const bot = new Bot<CustomContext>(process.env.BOT_TOKEN!);
+interface RunBotOptions {
+  botToken: string,
+  stateDirName: string
+}
+
+export const runBot = async (options: RunBotOptions) => {
+  const bot = new Bot(options.botToken);
 
   await bot.api.setMyCommands([
     { command: 'pidor', description: 'Определить пидора дня [group]' },
@@ -24,12 +24,8 @@ export const runBot = async () => {
   ]);
 
   bot.use(
-    replyWithMarkdownPlugin(),
-    pidorStateMiddleware(),
-    pokerRootStateMiddleware(),
-    pokerStateMiddleware(),
-    pidorModule(),
-    pokerModule(),
+    pidorModule(options.stateDirName),
+    pokerModule(options.stateDirName),
     voiceModule(),
   );
 
@@ -43,7 +39,10 @@ if (require.main === module) {
   // eslint-disable-next-line global-require
   require('dotenv-flow').config();
 
-  runBot()
+  runBot({
+    botToken: process.env.BOT_TOKEN!,
+    stateDirName: 'db/v1',
+  })
     .then(() => {
       process.exit(0);
     })
