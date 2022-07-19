@@ -20,14 +20,14 @@ export const pokerMessages = {
     gameFinished: 'Игра окончена, всем спасибо',
     playerMessage: (player: PokerPlayer, message: string) => formatter.join([formatter.mention(player.user), `: ${message}`]),
     roundFinished: (boardCards: PokerCard[], players: PokerPlayer[]) => formatter.join([
-      formatter.join([formatter.bold('Стол'), boardCards.join(' ')], ' '),
+      `Стол: ${boardCards.join(' ')}`,
       ...players.map((player) => formatter.join([
-        formatter.join([formatter.bold(formatter.mention(player.user)), player.cards.join(' ')], ' '),
-        formatter.join([
-          player.topCombination?.toString(),
+        formatter.join([formatter.mention(player.user), `: ${player.cards.join(' ')}`]),
+        [
+          player.topCombination,
           player.folded && pokerStrings.fold,
           player.win && pokerStrings.win,
-        ].filter(R.isTruthy), ' '),
+        ].filter(R.isTruthy).join(' '),
       ].filter(R.isTruthy), '\n')),
     ], '\n\n'),
     roundStarted: (players: PokerPlayer[], big: PokerPlayer, small: PokerPlayer) => formatter.join([
