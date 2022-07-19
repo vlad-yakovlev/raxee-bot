@@ -3,11 +3,11 @@ export type MayBeEscaped = string | Escaped;
 export class Escaped {
   value: string;
 
-  constructor(text: MayBeEscaped = '', escaped = false) {
-    if (typeof text === 'string') {
-      this.value = escaped ? text : Escaped.escape(text);
+  constructor(value: unknown = '', escaped = false) {
+    if (value instanceof Escaped) {
+      this.value = value.value;
     } else {
-      this.value = text.value;
+      this.value = escaped ? String(value) : Escaped.escape(String(value));
     }
   }
 

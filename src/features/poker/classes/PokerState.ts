@@ -1,7 +1,7 @@
 import * as R from 'remeda';
 
-import { MayBeEscaped } from '../../../utils/formatter';
 import { getRandomItem } from '../../../utils/getRandomItem';
+import { MayBeEscaped } from '../../../utils/md';
 import { shuffleItems } from '../../../utils/shuffleItems';
 import { pokerMessages, pokerStickers, pokerStrings } from '../constants';
 import { PokerContext } from '../types';

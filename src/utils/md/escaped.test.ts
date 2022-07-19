@@ -5,6 +5,10 @@ describe('#constructor', () => {
     expect(new Escaped('foo_bar').value).toBe('foo\\_bar');
   });
 
+  test('should save number', () => {
+    expect(new Escaped('123.456').value).toBe('123\\.456');
+  });
+
   test('should save unescaped text', () => {
     expect(new Escaped('foo_bar', true).value).toBe('foo_bar');
   });

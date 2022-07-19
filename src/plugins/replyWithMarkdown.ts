@@ -2,7 +2,7 @@ import { Context, NextFunction, RawApi } from 'grammy';
 import { Other } from 'grammy/out/core/api';
 import { AbortSignal } from 'grammy/out/shim.node';
 
-import { formatter, MayBeEscaped } from '../utils/formatter';
+import { MayBeEscaped, md } from '../utils/md';
 
 function replyWithMarkdown(
   this: Context,
@@ -11,7 +11,7 @@ function replyWithMarkdown(
   signal?: AbortSignal,
 ) {
   return this.reply(
-    formatter.build(text),
+    md.build(text),
     {
       parse_mode: 'MarkdownV2',
       ...other,
