@@ -23,6 +23,7 @@ export function md(strings: TemplateStringsArray, ...values: unknown[]) {
   return new Escaped(result, true);
 }
 
+/* istanbul ignore next */
 export namespace md {
   export const bold = boldFunc;
   export const build = buildFunc;
