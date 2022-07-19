@@ -1,5 +1,6 @@
 import * as R from 'remeda';
 
+import { MayBeEscaped } from '../../../utils/formatter';
 import { getRandomItem } from '../../../utils/getRandomItem';
 import { shuffleItems } from '../../../utils/shuffleItems';
 import { pokerMessages, pokerStickers, pokerStrings } from '../constants';
@@ -101,7 +102,7 @@ export class PokerState {
     return index;
   }
 
-  async broadcastMessage(message: string, players = this.players) {
+  async broadcastMessage(message: MayBeEscaped, players = this.players) {
     await Promise.all(players.map((player) => player.sendMessage(message)));
   }
 

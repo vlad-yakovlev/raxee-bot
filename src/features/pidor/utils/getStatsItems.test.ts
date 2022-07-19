@@ -1,4 +1,4 @@
-import { getStats } from './getStats';
+import { getStatsItems } from './getStatsItems';
 
 test('should count stats', () => {
   const items = {
@@ -20,5 +20,5 @@ test('should count stats', () => {
     3: { first_name: '', id: 3, is_bot: false },
   };
 
-  expect(getStats(items, users)).toMatchSnapshot();
+  expect(getStatsItems(items, users)).toMatchSnapshot();
 });

@@ -1,10 +1,11 @@
 import * as R from 'remeda';
 
-import { getMention } from '../../utils/getMention';
+import { formatter } from '../../utils/formatter';
 
 import { PokerCard } from './classes/PokerCard';
 import { PokerPlayer } from './classes/PokerPlayer';
 
+/* istanbul ignore next */
 export const pokerStrings = {
   allIn: '💰 All-in',
   call: (amount: number) => `✅ ${amount}`,
@@ -13,32 +14,41 @@ export const pokerStrings = {
   win: '🏆 Win',
 };
 
+/* istanbul ignore next */
 export const pokerMessages = {
   _: {
     gameFinished: 'Игра окончена, всем спасибо',
-    playerMessage: (player: PokerPlayer, message: string) => `${getMention(player.user)}: ${message}`,
-    roundFinished: (boardCards: PokerCard[], players: PokerPlayer[]) => [
+    playerMessage: (player: PokerPlayer, message: string) => formatter.join([formatter.mention(player.user), `: ${message}`]),
+    roundFinished: (boardCards: PokerCard[], players: PokerPlayer[]) => formatter.join([
       `Стол: ${boardCards.join(' ')}`,
-      ...players.map((player) => [
-        `${getMention(player.user)}: ${player.cards.join(' ')}`,
+      ...players.map((player) => formatter.join([
+        formatter.join([formatter.mention(player.user), `: ${player.cards.join(' ')}`]),
         [
           player.topCombination,
           player.folded && pokerStrings.fold,
           player.win && pokerStrings.win,
         ].filter(R.isTruthy).join(' '),
-      ].filter(R.isTruthy).join('\n')),
-    ].join('\n\n'),
-    roundStarted: (players: PokerPlayer[], big: PokerPlayer, small: PokerPlayer) => [
-      '*Играют*',
-      ...players.map((player) => `${getMention(player.user)} (${player.balance + player.bet} 🪙)`),
+      ].filter(R.isTruthy), '\n')),
+    ], '\n\n'),
+    roundStarted: (players: PokerPlayer[], big: PokerPlayer, small: PokerPlayer) => formatter.join([
+      formatter.bold('Играют'),
+      ...players.map((player) => formatter.join([formatter.mention(player.user), `(${player.balance + player.bet} 🪙)`], ' ')),
       '',
-      '*Big blind*',
-      `${getMention(big.user)} (${big.bet} 🪙) ${big.balance === 0 ? pokerStrings.allIn : ''}`,
+      formatter.bold('Big blind'),
+      formatter.join([
+        formatter.mention(big.user),
+        `(${big.bet} 🪙)`,
+        big.balance === 0 && pokerStrings.allIn,
+      ].filter(R.isTruthy), ' '),
       '',
-      '*Small blind*',
-      `${getMention(small.user)} (${small.bet} 🪙) ${small.balance === 0 ? pokerStrings.allIn : ''}`,
-    ].join('\n'),
-    userTurn: (player: PokerPlayer) => `Ходит ${getMention(player.user)}`,
+      formatter.bold('Small blind'),
+      formatter.join([
+        formatter.mention(small.user),
+        `(${small.bet} 🪙)`,
+        small.balance === 0 && pokerStrings.allIn,
+      ].filter(R.isTruthy), ' '),
+    ], '\n'),
+    userTurn: (player: PokerPlayer) => formatter.join(['Ходит', formatter.mention(player.user)], ' '),
   },
 
   onMessage: {
@@ -57,14 +67,14 @@ export const pokerMessages = {
     alreadyStarted: 'Игра в этом чате уже началась',
     duplicateOtherChat: 'Ты уже в игре в другом чате',
     duplicateSameChat: 'Ты уже в игре в этом чате',
-    registered: 'Готовься, ты в игре. Чтобы я смог с тобой общаться, [начни чат со мной](https://t.me/raxee_bot)',
+    registered: formatter.join(['Готовься, ты в игре. Чтобы я смог с тобой общаться, ', formatter.link('начни чат со мной', 'https://t.me/raxee_bot')]),
     tooMany: 'Слишком много игроков в этом чате',
   },
 
   start: {
     alreadyStarted: 'Игра уже началась, дождись ее окончания',
-    started: 'Го в [ЛС](https://t.me/raxee_bot), игра началась',
-    tooFew: 'Слишком мало игроков, добавляйтесь через /poker\\_reg',
+    started: formatter.join(['Го в ', formatter.link('ЛС', 'https://t.me/raxee_bot'), ', игра началась']),
+    tooFew: 'Слишком мало игроков, добавляйтесь через /poker_reg',
   },
 
   stopGroup: {
@@ -77,6 +87,7 @@ export const pokerMessages = {
   },
 };
 
+/* istanbul ignore next */
 export const pokerStickers = [
   'CAACAgIAAxkBAAIMTWLDXSBtPvO6simMAoERFOb3h4-qAAJcAQACPQ3oBAABMsv78bItBCkE',
   'CAACAgIAAxkBAAIMT2LDXUySk7O9FuUYLdM7nORoabV_AALCAQACPQ3oBHwoB5GHkvIFKQQ',

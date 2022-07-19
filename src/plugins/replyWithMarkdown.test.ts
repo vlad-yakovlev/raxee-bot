@@ -17,9 +17,9 @@ test('should run correctly when only text presented', async () => {
   const next = jest.fn();
 
   await replyWithMarkdownPlugin()(ctx, next);
-  await ctx.replyWithMarkdown('text');
+  await ctx.replyWithMarkdown('text_test');
 
-  expect(ctx.reply).toBeCalledWith('text', { parse_mode: 'Markdown' }, undefined);
+  expect(ctx.reply).toBeCalledWith('text\\_test', { parse_mode: 'MarkdownV2' }, undefined);
 });
 
 test('should pass arguments to ctx.reply', async () => {
@@ -28,7 +28,7 @@ test('should pass arguments to ctx.reply', async () => {
   const signal = {} as any;
 
   await replyWithMarkdownPlugin()(ctx, next);
-  await ctx.replyWithMarkdown('text', { reply_markup: { keyboard: [] } }, signal);
+  await ctx.replyWithMarkdown('text_test', { reply_markup: { keyboard: [] } }, signal);
 
-  expect(ctx.reply).toBeCalledWith('text', { parse_mode: 'Markdown', reply_markup: { keyboard: [] } }, signal);
+  expect(ctx.reply).toBeCalledWith('text\\_test', { parse_mode: 'MarkdownV2', reply_markup: { keyboard: [] } }, signal);
 });

@@ -12,7 +12,7 @@ import { pidorMessages } from './constants';
 import { pidorStateMiddleware } from './middleware/pidorState';
 import { getCurrentDate } from './utils/getCurrentDate';
 import { getMessageVariant } from './utils/getMessageVariant';
-import { getStats } from './utils/getStats';
+import { getStatsItems } from './utils/getStatsItems';
 
 export const pidorModule = (stateDirName: string) => {
   const bot = new Composer(
@@ -73,33 +73,21 @@ export const pidorModule = (stateDirName: string) => {
   });
 
   bot.chatType(['group', 'supergroup']).command('pidor_stats', async (ctx) => {
-    const stats = getStats(ctx.pidorState.stats, ctx.pidorState.users);
+    const statsItems = getStatsItems(ctx.pidorState.stats, ctx.pidorState.users);
 
-    await ctx.replyWithMarkdown([
-      pidorMessages.stats.title(),
-      '',
-      ...stats.map((item, index) => pidorMessages.stats.row(index, item.user, item.count)),
-      '',
-      pidorMessages.stats.total(Object.keys(ctx.pidorState.users).length),
-    ].join('\n'));
+    await ctx.replyWithMarkdown(pidorMessages.stats(statsItems, Object.keys(ctx.pidorState.users).length));
   });
 
   bot.chatType(['group', 'supergroup']).command('pidor_stats_year', async (ctx) => {
     const currentYear = format(new Date(), 'yyyy');
-    const stats = getStats(pickBy(ctx.pidorState.stats, (_, key) => key.startsWith(currentYear)), ctx.pidorState.users);
+    const statsItems = getStatsItems(pickBy(ctx.pidorState.stats, (_, key) => key.startsWith(currentYear)), ctx.pidorState.users);
 
-    await ctx.replyWithMarkdown([
-      pidorMessages.statsYear.title(),
-      '',
-      ...stats.map((item, index) => pidorMessages.statsYear.row(index, item.user, item.count)),
-      '',
-      pidorMessages.statsYear.total(Object.keys(ctx.pidorState.users).length),
-    ].join('\n'));
+    await ctx.replyWithMarkdown(pidorMessages.statsYear(statsItems, Object.keys(ctx.pidorState.users).length));
   });
 
   // TODO: https://grammy.dev/plugins/command-filter.html
   bot.chatType(['group', 'supergroup']).command('pidor_2021', async (ctx) => {
-    const stats = getStats(pickBy(ctx.pidorState.stats, (_, key) => key.startsWith('2021')), ctx.pidorState.users);
+    const stats = getStatsItems(pickBy(ctx.pidorState.stats, (_, key) => key.startsWith('2021')), ctx.pidorState.users);
 
     if (!stats.length) {
       throw new Error('ctx.pidor.stats for 2021 is empty');

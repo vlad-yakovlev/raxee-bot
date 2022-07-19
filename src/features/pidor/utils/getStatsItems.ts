@@ -1,10 +1,15 @@
 import { User } from 'grammy/out/platform.node';
 import * as R from 'remeda';
 
-export const getStats = (
+export interface StatsItem {
+  count: number
+  user: User
+}
+
+export const getStatsItems = (
   items: Record<string, number>,
   users: Record<string, User>,
-) => {
+): StatsItem[] => {
   return R.pipe(
     items,
     R.values,

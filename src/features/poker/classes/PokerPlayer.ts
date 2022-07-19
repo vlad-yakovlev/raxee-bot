@@ -2,6 +2,7 @@ import { User } from 'grammy/out/platform.node';
 import * as R from 'remeda';
 
 import { differenceWith } from '../../../utils/differenceWith';
+import { formatter, MayBeEscaped } from '../../../utils/formatter';
 import { pokerMessages, pokerStrings } from '../constants';
 import { PokerContext } from '../types';
 import { getPokerCombinations } from '../utils/getPokerCombinations';
@@ -107,12 +108,12 @@ export class PokerPlayer {
     ].filter(R.isTruthy);
   }
 
-  async sendMessage(message: string, withKeyboard = false) {
+  async sendMessage(message: MayBeEscaped, withKeyboard = false) {
     await this.ctx.api.sendMessage(
       this.user.id,
-      message,
+      formatter.build(message),
       {
-        parse_mode: 'Markdown',
+        parse_mode: 'MarkdownV2',
         ...withKeyboard && { reply_markup: { keyboard: this.keyboard } },
       },
     );
