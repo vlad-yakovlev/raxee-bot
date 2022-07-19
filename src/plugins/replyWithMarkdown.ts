@@ -1,15 +1,30 @@
-import { Context, NextFunction } from 'grammy';
+import { Context, NextFunction, RawApi } from 'grammy';
+import { Other } from 'grammy/out/core/api';
+import { AbortSignal } from 'grammy/out/shim.node';
 
-import { formatter } from '../utils/formatter';
+import { formatter, MayBeEscaped } from '../utils/formatter';
+
+function replyWithMarkdown(
+  this: Context,
+  text: MayBeEscaped,
+  other?: Other<RawApi, 'sendMessage', 'chat_id' | 'text'>,
+  signal?: AbortSignal,
+) {
+  return this.reply(
+    formatter.build(text),
+    {
+      parse_mode: 'MarkdownV2',
+      ...other,
+    },
+    signal,
+  );
+}
 
 export interface ReplyWithMarkdownFlavour {
-  replyWithMarkdown: Context['reply']
+  replyWithMarkdown: typeof replyWithMarkdown
 }
 
 export const replyWithMarkdownPlugin = () => async (ctx: Context & ReplyWithMarkdownFlavour, next: NextFunction) => {
-  ctx.replyWithMarkdown = function replyWithMarkdown(this: typeof ctx, ...args: Parameters<Context['reply']>) {
-    return this.reply(formatter.build(args[0]), { parse_mode: 'MarkdownV2', ...args[1] }, args[2]);
-  };
-
+  ctx.replyWithMarkdown = replyWithMarkdown;
   await next();
 };

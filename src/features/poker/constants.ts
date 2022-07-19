@@ -1,6 +1,6 @@
 import * as R from 'remeda';
 
-import { getMention } from '../../utils/getMention';
+import { formatter } from '../../utils/formatter';
 
 import { PokerCard } from './classes/PokerCard';
 import { PokerPlayer } from './classes/PokerPlayer';
@@ -16,11 +16,11 @@ export const pokerStrings = {
 export const pokerMessages = {
   _: {
     gameFinished: 'Игра окончена, всем спасибо',
-    playerMessage: (player: PokerPlayer, message: string) => `${getMention(player.user)}: ${message}`,
+    playerMessage: (player: PokerPlayer, message: string) => `${formatter.mention(player.user)}: ${message}`,
     roundFinished: (boardCards: PokerCard[], players: PokerPlayer[]) => [
       `Стол: ${boardCards.join(' ')}`,
       ...players.map((player) => [
-        `${getMention(player.user)}: ${player.cards.join(' ')}`,
+        `${formatter.mention(player.user)}: ${player.cards.join(' ')}`,
         [
           player.topCombination,
           player.folded && pokerStrings.fold,
@@ -30,15 +30,15 @@ export const pokerMessages = {
     ].join('\n\n'),
     roundStarted: (players: PokerPlayer[], big: PokerPlayer, small: PokerPlayer) => [
       '*Играют*',
-      ...players.map((player) => `${getMention(player.user)} (${player.balance + player.bet} 🪙)`),
+      ...players.map((player) => `${formatter.mention(player.user)} (${player.balance + player.bet} 🪙)`),
       '',
       '*Big blind*',
-      `${getMention(big.user)} (${big.bet} 🪙) ${big.balance === 0 ? pokerStrings.allIn : ''}`,
+      `${formatter.mention(big.user)} (${big.bet} 🪙) ${big.balance === 0 ? pokerStrings.allIn : ''}`,
       '',
       '*Small blind*',
-      `${getMention(small.user)} (${small.bet} 🪙) ${small.balance === 0 ? pokerStrings.allIn : ''}`,
+      `${formatter.mention(small.user)} (${small.bet} 🪙) ${small.balance === 0 ? pokerStrings.allIn : ''}`,
     ].join('\n'),
-    userTurn: (player: PokerPlayer) => `Ходит ${getMention(player.user)}`,
+    userTurn: (player: PokerPlayer) => `Ходит ${formatter.mention(player.user)}`,
   },
 
   onMessage: {
