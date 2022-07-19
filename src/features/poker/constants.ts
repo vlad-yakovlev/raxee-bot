@@ -1,6 +1,6 @@
 import * as R from 'remeda';
 
-import { formatter } from '../../utils/formatter';
+import { md } from '../../utils/md';
 
 import { PokerCard } from './classes/PokerCard';
 import { PokerPlayer } from './classes/PokerPlayer';
@@ -18,11 +18,11 @@ export const pokerStrings = {
 export const pokerMessages = {
   _: {
     gameFinished: 'Игра окончена, всем спасибо',
-    playerMessage: (player: PokerPlayer, message: string) => formatter.join([formatter.mention(player.user), `: ${message}`]),
-    roundFinished: (boardCards: PokerCard[], players: PokerPlayer[]) => formatter.join([
+    playerMessage: (player: PokerPlayer, message: string) => md.join([md.mention(player.user), `: ${message}`]),
+    roundFinished: (boardCards: PokerCard[], players: PokerPlayer[]) => md.join([
       `Стол: ${boardCards.join(' ')}`,
-      ...players.map((player) => formatter.join([
-        formatter.join([formatter.mention(player.user), `: ${player.cards.join(' ')}`]),
+      ...players.map((player) => md.join([
+        md.join([md.mention(player.user), `: ${player.cards.join(' ')}`]),
         [
           player.topCombination,
           player.folded && pokerStrings.fold,
@@ -30,25 +30,25 @@ export const pokerMessages = {
         ].filter(R.isTruthy).join(' '),
       ].filter(R.isTruthy), '\n')),
     ], '\n\n'),
-    roundStarted: (players: PokerPlayer[], big: PokerPlayer, small: PokerPlayer) => formatter.join([
-      formatter.bold('Играют'),
-      ...players.map((player) => formatter.join([formatter.mention(player.user), `(${player.balance + player.bet} 🪙)`], ' ')),
+    roundStarted: (players: PokerPlayer[], big: PokerPlayer, small: PokerPlayer) => md.join([
+      md.bold('Играют'),
+      ...players.map((player) => md.join([md.mention(player.user), `(${player.balance + player.bet} 🪙)`], ' ')),
       '',
-      formatter.bold('Big blind'),
-      formatter.join([
-        formatter.mention(big.user),
+      md.bold('Big blind'),
+      md.join([
+        md.mention(big.user),
         `(${big.bet} 🪙)`,
         big.balance === 0 && pokerStrings.allIn,
       ].filter(R.isTruthy), ' '),
       '',
-      formatter.bold('Small blind'),
-      formatter.join([
-        formatter.mention(small.user),
+      md.bold('Small blind'),
+      md.join([
+        md.mention(small.user),
         `(${small.bet} 🪙)`,
         small.balance === 0 && pokerStrings.allIn,
       ].filter(R.isTruthy), ' '),
     ], '\n'),
-    userTurn: (player: PokerPlayer) => formatter.join(['Ходит', formatter.mention(player.user)], ' '),
+    userTurn: (player: PokerPlayer) => md.join(['Ходит', md.mention(player.user)], ' '),
   },
 
   onMessage: {
@@ -67,13 +67,13 @@ export const pokerMessages = {
     alreadyStarted: 'Игра в этом чате уже началась',
     duplicateOtherChat: 'Ты уже в игре в другом чате',
     duplicateSameChat: 'Ты уже в игре в этом чате',
-    registered: formatter.join(['Готовься, ты в игре. Чтобы я смог с тобой общаться, ', formatter.link('начни чат со мной', 'https://t.me/raxee_bot')]),
+    registered: md.join(['Готовься, ты в игре. Чтобы я смог с тобой общаться, ', md.link('начни чат со мной', 'https://t.me/raxee_bot')]),
     tooMany: 'Слишком много игроков в этом чате',
   },
 
   start: {
     alreadyStarted: 'Игра уже началась, дождись ее окончания',
-    started: formatter.join(['Го в ', formatter.link('ЛС', 'https://t.me/raxee_bot'), ', игра началась']),
+    started: md.join(['Го в ', md.link('ЛС', 'https://t.me/raxee_bot'), ', игра началась']),
     tooFew: 'Слишком мало игроков, добавляйтесь через /poker_reg',
   },
 

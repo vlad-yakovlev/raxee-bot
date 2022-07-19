@@ -1,6 +1,6 @@
 import { User } from 'grammy/out/platform.node';
 
-import { MayBeEscaped } from '../../../utils/formatter';
+import { MayBeEscaped } from '../../../utils/md';
 
 export type MessageVariants = Array<(user?: User) => MayBeEscaped>;
 
