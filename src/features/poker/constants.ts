@@ -18,11 +18,11 @@ export const pokerStrings = {
 export const pokerMessages = {
   _: {
     gameFinished: 'Игра окончена, всем спасибо',
-    playerMessage: (player: PokerPlayer, message: string) => md.join([md.mention(player.user), `: ${message}`]),
+    playerMessage: (player: PokerPlayer, message: string) => md`${md.mention(player.user)}: ${message}`,
     roundFinished: (boardCards: PokerCard[], players: PokerPlayer[]) => md.join([
       `Стол: ${boardCards.join(' ')}`,
       ...players.map((player) => md.join([
-        md.join([md.mention(player.user), `: ${player.cards.join(' ')}`]),
+        md`${md.mention(player.user)}: ${player.cards.join(' ')}`,
         [
           player.topCombination,
           player.folded && pokerStrings.fold,
@@ -32,7 +32,7 @@ export const pokerMessages = {
     ], '\n\n'),
     roundStarted: (players: PokerPlayer[], big: PokerPlayer, small: PokerPlayer) => md.join([
       md.bold('Играют'),
-      ...players.map((player) => md.join([md.mention(player.user), `(${player.balance + player.bet} 🪙)`], ' ')),
+      ...players.map((player) => md`${md.mention(player.user)} (${player.balance + player.bet} 🪙)`),
       '',
       md.bold('Big blind'),
       md.join([
@@ -48,7 +48,7 @@ export const pokerMessages = {
         small.balance === 0 && pokerStrings.allIn,
       ].filter(R.isTruthy), ' '),
     ], '\n'),
-    userTurn: (player: PokerPlayer) => md.join(['Ходит', md.mention(player.user)], ' '),
+    userTurn: (player: PokerPlayer) => md`Ходит ${md.mention(player.user)}`,
   },
 
   onMessage: {
@@ -67,13 +67,13 @@ export const pokerMessages = {
     alreadyStarted: 'Игра в этом чате уже началась',
     duplicateOtherChat: 'Ты уже в игре в другом чате',
     duplicateSameChat: 'Ты уже в игре в этом чате',
-    registered: md.join(['Готовься, ты в игре. Чтобы я смог с тобой общаться, ', md.link('начни чат со мной', 'https://t.me/raxee_bot')]),
+    registered: md`Готовься, ты в игре. Чтобы я смог с тобой общаться, ${md.link('начни чат со мной', 'https://t.me/raxee_bot')}`,
     tooMany: 'Слишком много игроков в этом чате',
   },
 
   start: {
     alreadyStarted: 'Игра уже началась, дождись ее окончания',
-    started: md.join(['Го в ', md.link('ЛС', 'https://t.me/raxee_bot'), ', игра началась']),
+    started: md`Го в ${md.link('ЛС', 'https://t.me/raxee_bot')}, игра началась`,
     tooFew: 'Слишком мало игроков, добавляйтесь через /poker_reg',
   },
 

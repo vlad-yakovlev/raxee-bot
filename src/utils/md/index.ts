@@ -17,7 +17,7 @@ export function md(strings: TemplateStringsArray, ...values: unknown[]) {
   let result = `${new Escaped(strings[0])}`;
 
   for (let i = 1; i < strings.length; i += 1) {
-    result += `${new Escaped(strings[i])}${new Escaped(values[i - 1])}`;
+    result += `${new Escaped(values[i - 1])}${new Escaped(strings[i])}`;
   }
 
   return new Escaped(result, true);
