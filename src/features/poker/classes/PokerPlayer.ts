@@ -1,8 +1,8 @@
 import { User } from 'grammy/out/platform.node';
 import * as R from 'remeda';
+import { Markdown, md } from 'telegram-md';
 
 import { differenceWith } from '../../../utils/differenceWith';
-import { MayBeEscaped, md } from '../../../utils/md';
 import { pokerMessages, pokerStrings } from '../constants';
 import { PokerContext } from '../types';
 import { getPokerCombinations } from '../utils/getPokerCombinations';
@@ -108,7 +108,7 @@ export class PokerPlayer {
     ].filter(R.isTruthy);
   }
 
-  async sendMessage(message: MayBeEscaped, withKeyboard = false) {
+  async sendMessage(message: string | Markdown, withKeyboard = false) {
     await this.ctx.api.sendMessage(
       this.user.id,
       md.build(message),

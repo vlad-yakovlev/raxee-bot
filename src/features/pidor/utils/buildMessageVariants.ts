@@ -1,7 +1,6 @@
 import { User } from 'grammy/out/platform.node';
+import { Markdown } from 'telegram-md';
 
-import { MayBeEscaped } from '../../../utils/md';
-
-export type MessageVariants = Array<(user?: User) => MayBeEscaped>;
+export type MessageVariants = Array<(user?: User) => string | Markdown>;
 
 export const buildMessageVariants = (variants: MessageVariants) => variants;

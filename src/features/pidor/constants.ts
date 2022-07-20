@@ -1,8 +1,9 @@
 /* eslint-disable max-len, no-irregular-whitespace */
 import { User } from 'grammy/out/platform.node';
+import { md } from 'telegram-md';
 
+import { getMention } from '../../utils/getMention';
 import { getUserName } from '../../utils/getUserName';
-import { md } from '../../utils/md';
 
 import { buildMessageVariants } from './utils/buildMessageVariants';
 import { getDayString } from './utils/getDayString';
@@ -13,7 +14,7 @@ import { StatsItem } from './utils/getStatsItems';
 export const pidorMessages = {
   _: {
     duplicate: buildMessageVariants([
-      (user) => md`По моей информации, ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${md.mention(user)}`,
+      (user) => md`По моей информации, ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${getMention(user)}`,
     ]),
 
     empty: buildMessageVariants([
@@ -68,23 +69,23 @@ export const pidorMessages = {
     ]),
 
     found4: buildMessageVariants([
-      (user) => md`.∧＿∧ \n( ･ω･｡)つ━☆・*。 \n⊂　 ノ 　　　・゜+. \nしーＪ　　　°。+ *´¨) \n　　　　　　　　　.· ´¸.·*´¨) \n　　　　　　　　　　(¸.·´ (¸.·'* ☆ ВЖУХ И ТЫ ${getPidorString(1, 1, { uppercase: true })}, ${md.mention(user)}`,
-      (user) => md`${md.bold(`${getPidorString(1, 1, { capitalize: true })} ${getDayString()}`)} обыкновенный, 1шт. \u2013 ${md.mention(user)}`,
-      (user) => md`Ага! Поздравляю! ${md.bold(`Ты ${getPidorString(1, 1)}`)} \u2013 ${md.mention(user)}`,
-      (user) => md`Анализ завершен. ${md.bold(`Ты ${getPidorString(1, 1)}`)}, ${md.mention(user)}`,
-      (user) => md`Кажется, ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${md.mention(user)}`,
-      (user) => md`И прекрасный человек ${getDayString()}... а нет, ошибка, всего-лишь ${md.bold(getPidorString(1, 1))} \u2013 ${md.mention(user)}`,
-      (user) => md`Кто бы мог подумать, но ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${md.mention(user)}`,
-      (user) => md`Кто тут у нас ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)}? Ты ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${md.mention(user)}`,
-      (user) => md`Ну ты и ${md.bold(getPidorString(1, 1))}, ${md.mention(user)}`,
-      (user) => md`Няшный ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${md.mention(user)}`,
-      (user) => md`Ого, вы посмотрите только! А ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} то \u2013 ${md.mention(user)}`,
-      (user) => md`Стоять! Не двигаться! Вы объявлены ${md.bold(`${getPidorString(5, 1)} ${getDayString()}`)}, ${md.mention(user)}`,
-      (user) => md`Что? Где? Когда? А ты ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${md.mention(user)}`,
+      (user) => md`.∧＿∧ \n( ･ω･｡)つ━☆・*。 \n⊂　 ノ 　　　・゜+. \nしーＪ　　　°。+ *´¨) \n　　　　　　　　　.· ´¸.·*´¨) \n　　　　　　　　　　(¸.·´ (¸.·'* ☆ ВЖУХ И ТЫ ${getPidorString(1, 1, { uppercase: true })}, ${getMention(user)}`,
+      (user) => md`${md.bold(`${getPidorString(1, 1, { capitalize: true })} ${getDayString()}`)} обыкновенный, 1шт. \u2013 ${getMention(user)}`,
+      (user) => md`Ага! Поздравляю! ${md.bold(`Ты ${getPidorString(1, 1)}`)} \u2013 ${getMention(user)}`,
+      (user) => md`Анализ завершен. ${md.bold(`Ты ${getPidorString(1, 1)}`)}, ${getMention(user)}`,
+      (user) => md`Кажется, ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${getMention(user)}`,
+      (user) => md`И прекрасный человек ${getDayString()}... а нет, ошибка, всего-лишь ${md.bold(getPidorString(1, 1))} \u2013 ${getMention(user)}`,
+      (user) => md`Кто бы мог подумать, но ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${getMention(user)}`,
+      (user) => md`Кто тут у нас ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)}? Ты ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${getMention(user)}`,
+      (user) => md`Ну ты и ${md.bold(getPidorString(1, 1))}, ${getMention(user)}`,
+      (user) => md`Няшный ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${getMention(user)}`,
+      (user) => md`Ого, вы посмотрите только! А ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} то \u2013 ${getMention(user)}`,
+      (user) => md`Стоять! Не двигаться! Вы объявлены ${md.bold(`${getPidorString(5, 1)} ${getDayString()}`)}, ${getMention(user)}`,
+      (user) => md`Что? Где? Когда? А ты ${md.bold(`${getPidorString(1, 1)} ${getDayString()}`)} \u2013 ${getMention(user)}`,
     ]),
 
     newYear: (year: string) => md`Чуть не забыл.. ${md.bold(`С Новым Годом, ${getPidorString(1, 2)}!`)}\nУзнай кто ${md.italic('победил')}: /pidor_${year}`,
-    year: (user: User, year: string) => md`${md.bold(`Пидор ${year} года`)} \u2013 ${md.mention(user)}`,
+    year: (user: User, year: string) => md`${md.bold(`Пидор ${year} года`)} \u2013 ${getMention(user)}`,
   },
 
   onMessage: {
@@ -115,7 +116,7 @@ export const pidorMessages = {
     added: buildMessageVariants([
       () => md`Ты в игре, ${md.bold('сучка')}`,
       () => 'Скоро и до тебя доберемся',
-      (user) => md`${md.bold('PREPAREURANUS')}, ${md.mention(user)}`,
+      (user) => md`${md.bold('PREPAREURANUS')}, ${getMention(user)}`,
     ]),
 
     duplicate: buildMessageVariants([

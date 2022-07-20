@@ -1,6 +1,7 @@
 import * as R from 'remeda';
+import { md } from 'telegram-md';
 
-import { md } from '../../utils/md';
+import { getMention } from '../../utils/getMention';
 
 import { PokerCard } from './classes/PokerCard';
 import { PokerPlayer } from './classes/PokerPlayer';
@@ -18,11 +19,11 @@ export const pokerStrings = {
 export const pokerMessages = {
   _: {
     gameFinished: 'Игра окончена, всем спасибо',
-    playerMessage: (player: PokerPlayer, message: string) => md`${md.mention(player.user)}: ${message}`,
+    playerMessage: (player: PokerPlayer, message: string) => md`${getMention(player.user)}: ${message}`,
     roundFinished: (boardCards: PokerCard[], players: PokerPlayer[]) => md.join([
       `Стол: ${boardCards.join(' ')}`,
       ...players.map((player) => md.join([
-        md`${md.mention(player.user)}: ${player.cards.join(' ')}`,
+        md`${getMention(player.user)}: ${player.cards.join(' ')}`,
         [
           player.topCombination,
           player.folded && pokerStrings.fold,
@@ -32,23 +33,23 @@ export const pokerMessages = {
     ], '\n\n'),
     roundStarted: (players: PokerPlayer[], big: PokerPlayer, small: PokerPlayer) => md.join([
       md.bold('Играют'),
-      ...players.map((player) => md`${md.mention(player.user)} (${player.balance + player.bet} 🪙)`),
+      ...players.map((player) => md`${getMention(player.user)} (${player.balance + player.bet} 🪙)`),
       '',
       md.bold('Big blind'),
       md.join([
-        md.mention(big.user),
+        getMention(big.user),
         `(${big.bet} 🪙)`,
         big.balance === 0 && pokerStrings.allIn,
       ].filter(R.isTruthy), ' '),
       '',
       md.bold('Small blind'),
       md.join([
-        md.mention(small.user),
+        getMention(small.user),
         `(${small.bet} 🪙)`,
         small.balance === 0 && pokerStrings.allIn,
       ].filter(R.isTruthy), ' '),
     ], '\n'),
-    userTurn: (player: PokerPlayer) => md`Ходит ${md.mention(player.user)}`,
+    userTurn: (player: PokerPlayer) => md`Ходит ${getMention(player.user)}`,
   },
 
   onMessage: {
