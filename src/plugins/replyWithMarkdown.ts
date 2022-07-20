@@ -1,12 +1,11 @@
 import { Context, NextFunction, RawApi } from 'grammy';
 import { Other } from 'grammy/out/core/api';
 import { AbortSignal } from 'grammy/out/shim.node';
-
-import { MayBeEscaped, md } from '../utils/md';
+import { Markdown, md } from 'telegram-md';
 
 function replyWithMarkdown(
   this: Context,
-  text: MayBeEscaped,
+  text: string | Markdown,
   other?: Other<RawApi, 'sendMessage', 'chat_id' | 'text'>,
   signal?: AbortSignal,
 ) {

@@ -1,7 +1,7 @@
 import * as R from 'remeda';
+import { Markdown } from 'telegram-md';
 
 import { getRandomItem } from '../../../utils/getRandomItem';
-import { MayBeEscaped } from '../../../utils/md';
 import { shuffleItems } from '../../../utils/shuffleItems';
 import { pokerMessages, pokerStickers, pokerStrings } from '../constants';
 import { PokerContext } from '../types';
@@ -102,7 +102,7 @@ export class PokerState {
     return index;
   }
 
-  async broadcastMessage(message: MayBeEscaped, players = this.players) {
+  async broadcastMessage(message: string | Markdown, players = this.players) {
     await Promise.all(players.map((player) => player.sendMessage(message)));
   }
 
