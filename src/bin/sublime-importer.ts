@@ -38,29 +38,6 @@ const SUBLIME_TEMPLATES = [
   'Пидор дня обыкновенный, 1шт. - ',
 ];
 
-const readTgExport = async (filename: string): Promise<TgExport> => {
-  return R.pipe(
-    await fs.readFile(filename, { encoding: 'utf-8' }),
-    JSON.parse,
-  );
-};
-
-const readState = async (id: number): Promise<PidorState> => {
-  const storage = new FileAdapter<PidorState>({
-    dirName: 'db/v1',
-  });
-
-  return await storage.read(`pidor_-${id}`) || { importedStats: {}, stats: {}, users: {} };
-};
-
-const writeState = async (id: number, state: PidorState) => {
-  const storage = new FileAdapter<PidorState>({
-    dirName: 'db/v1',
-  });
-
-  await storage.write(`pidor_-${id}`, state);
-};
-
 const getMessageText = (message: TgExportMessage): string => {
   if (!message.text) {
     return '';
@@ -80,8 +57,14 @@ const getMessageText = (message: TgExportMessage): string => {
 };
 
 export const runSublimeImporter = async (filename: string) => {
-  const tgExport = await readTgExport(filename);
-  const state = await readState(tgExport.id);
+  const tgExport: TgExport = await R.pipe(
+    await fs.readFile(filename, { encoding: 'utf-8' }),
+    JSON.parse,
+  );
+
+  const storage = new FileAdapter<PidorState>({ dirName: 'db/v1' });
+  const storageKey = `pidor_-${tgExport.id}`;
+  const state = (await storage.read(storageKey)) || { importedStats: {}, stats: {}, users: {} };
 
   tgExport.messages.forEach((message) => {
     if (Number(message.from_id?.slice(4)) === SUBLIME_USER_ID) {
@@ -101,7 +84,7 @@ export const runSublimeImporter = async (filename: string) => {
     }
   });
 
-  await writeState(tgExport.id, state);
+  await storage.write(storageKey, state);
 };
 
 /* istanbul ignore next */
