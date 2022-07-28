@@ -1,6 +1,5 @@
 import * as R from 'remeda';
 
-import { uniqWith } from '../../../utils/uniqWith';
 import { PokerCard } from '../classes/PokerCard';
 import { PokerCombination } from '../classes/PokerCombination';
 
@@ -23,7 +22,7 @@ export const getPokerStraight = (cards: PokerCard[]): PokerCombination[] => {
     [...cards, ...cards],
     getPokerCardsSubsets,
     R.filter(isStraight),
-    uniqWith(R.equals),
+    R.uniqWith(R.equals),
     R.map((subset) => new PokerCombination(4, subset)),
   );
 };

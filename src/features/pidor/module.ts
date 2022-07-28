@@ -6,7 +6,6 @@ import { replyWithMarkdownPlugin } from '../../plugins/replyWithMarkdown';
 import { asyncPause } from '../../utils/asyncPause';
 import { getRandomItem } from '../../utils/getRandomItem';
 import { getUserName } from '../../utils/getUserName';
-import { pickBy } from '../../utils/pickBy';
 
 import { pidorMessages } from './constants';
 import { pidorStateMiddleware } from './middleware/pidorState';
@@ -64,7 +63,7 @@ export const pidorModule = (stateDirName: string) => {
         ctx.pidorState.stats[date] = ctx.from.id;
       }
     });
-    ctx.pidorState.importedStats = pickBy(ctx.pidorState.importedStats, (_value, date) => !ctx.pidorState.stats[date]);
+    ctx.pidorState.importedStats = R.pickBy(ctx.pidorState.importedStats, (_value, date) => !ctx.pidorState.stats[date]);
 
     await ctx.replyWithMarkdown(getMessageVariant(
       alreadyRegistered ? pidorMessages.register.duplicate : pidorMessages.register.added,
@@ -80,14 +79,14 @@ export const pidorModule = (stateDirName: string) => {
 
   bot.chatType(['group', 'supergroup']).command('pidor_stats_year', async (ctx) => {
     const currentYear = format(new Date(), 'yyyy');
-    const statsItems = getStatsItems(pickBy(ctx.pidorState.stats, (_, key) => key.startsWith(currentYear)), ctx.pidorState.users);
+    const statsItems = getStatsItems(R.pickBy(ctx.pidorState.stats, (_, key) => key.startsWith(currentYear)), ctx.pidorState.users);
 
     await ctx.replyWithMarkdown(pidorMessages.statsYear(statsItems, Object.keys(ctx.pidorState.users).length));
   });
 
   // TODO: https://grammy.dev/plugins/command-filter.html
   bot.chatType(['group', 'supergroup']).command('pidor_2021', async (ctx) => {
-    const stats = getStatsItems(pickBy(ctx.pidorState.stats, (_, key) => key.startsWith('2021')), ctx.pidorState.users);
+    const stats = getStatsItems(R.pickBy(ctx.pidorState.stats, (_, key) => key.startsWith('2021')), ctx.pidorState.users);
 
     if (!stats.length) {
       throw new Error('ctx.pidor.stats for 2021 is empty');

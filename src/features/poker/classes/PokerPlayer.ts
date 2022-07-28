@@ -2,7 +2,6 @@ import { User } from 'grammy/out/platform.node';
 import * as R from 'remeda';
 import { Markdown, md } from 'telegram-md';
 
-import { differenceWith } from '../../../utils/differenceWith';
 import { pokerMessages, pokerStrings } from '../constants';
 import { PokerContext } from '../types';
 import { getPokerCombinations } from '../utils/getPokerCombinations';
@@ -61,7 +60,7 @@ export class PokerPlayer {
     return R.pipe(
       [...this.ctx.pokerState.cards, ...this.cards],
       getPokerCombinations,
-      differenceWith(this.ctx.pokerState.boardCombinations, R.equals),
+      R.differenceWith(this.ctx.pokerState.boardCombinations, R.equals),
       R.first(),
     );
   }
