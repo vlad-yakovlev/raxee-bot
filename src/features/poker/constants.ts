@@ -12,6 +12,7 @@ export const pokerStrings = {
   call: (amount: number) => `✅ ${amount}`,
   check: '✊ Check',
   fold: '❌ Fold',
+  preFlop: 'Префлоп',
   win: '🏆 Win',
 };
 

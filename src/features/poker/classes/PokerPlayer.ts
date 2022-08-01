@@ -95,7 +95,9 @@ export class PokerPlayer {
 
   get keyboard(): string[][] {
     return [
-      this.ctx.pokerState.cards.map((card, index) => (index < this.ctx.pokerState.cardsOpened ? card.toString() : ' ')),
+      this.ctx.pokerState.cardsOpened
+        ? this.ctx.pokerState.cards.map((card, index) => (index < this.ctx.pokerState.cardsOpened ? card.toString() : ' '))
+        : [pokerStrings.preFlop],
       [`Банк: ${this.ctx.pokerState.bankAmount} 🪙`],
       !this.lost && [...this.cards.map(String), `${this.balance} 🪙`],
       this === this.ctx.pokerState.activePlayer && [

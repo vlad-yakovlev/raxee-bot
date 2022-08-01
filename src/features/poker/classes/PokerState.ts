@@ -126,7 +126,7 @@ export class PokerState {
     this.started = true;
     this.round += 1;
     this.cards = deck.splice(0, 5);
-    this.cardsOpened = 3;
+    this.cardsOpened = 0;
 
     this.players.forEach((player) => {
       player.bet = 0;
@@ -136,10 +136,10 @@ export class PokerState {
     });
 
     this.firstPlayerIndex = this.getNextPlayerIndex(this.firstPlayerIndex);
-    this.activePlayerIndex = this.getNextPlayerIndex(this.firstPlayerIndex);
+    this.activePlayerIndex = this.firstPlayerIndex;
 
     const big = this.players[this.firstPlayerIndex];
-    const small = this.activePlayer;
+    const small = this.players[this.getNextPlayerIndex(this.firstPlayerIndex)];
 
     big.increaseBet(this.baseBet * 2);
     small.increaseBet(this.baseBet);
@@ -200,7 +200,7 @@ export class PokerState {
         player.turnMade = false;
       });
 
-      this.cardsOpened += 1;
+      this.cardsOpened += this.cardsOpened ? 1 : 3;
       this.activePlayerIndex = this.getNextPlayerIndex(this.firstPlayerIndex - 1);
     } else {
       this.activePlayerIndex = this.getNextPlayerIndex(this.activePlayerIndex);
