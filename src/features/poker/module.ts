@@ -66,13 +66,13 @@ export const pokerModule = (stateDirName: string) => {
     await ctx.replyWithMarkdown(isStarted ? pokerMessages.stopGroup.stopped : pokerMessages.stopGroup.cancelled);
   });
 
-//   bot.chatType('private').command('poker_stop', async (ctx) => {
-//     if (ctx.pokerRootState.lobbyByUser) {
-//       await ctx.pokerState.finishGame();
-//     } else {
-//       await ctx.replyWithMarkdown(pokerMessages.stopPrivate.notFound);
-//     }
-//   });
+  bot.chatType('private').command('poker_stop', async (ctx) => {
+    if (ctx.pokerRootState.lobbyByUser) {
+      await ctx.pokerState.finishGame();
+    } else {
+      await ctx.replyWithMarkdown(pokerMessages.stopPrivate.notFound);
+    }
+  });
 
   bot.chatType('private').on('message:text', async (ctx, next) => {
     if (ctx.pokerRootState.lobbyByUser) {
