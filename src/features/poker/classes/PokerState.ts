@@ -182,10 +182,10 @@ export class PokerState {
       });
 
       this.cardsOpened += this.cardsOpened ? 1 : 3;
-      this.playersList.toIndex(this.firstPlayerIndex);
-    } else {
-      this.playersList.toNext();
+      this.playersList.toIndex(this.firstPlayerIndex - 1);
     }
+
+    this.playersList.toNext();
 
     await this.setKeyboards();
   }
