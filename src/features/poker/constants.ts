@@ -9,7 +9,7 @@ import { PokerPlayer } from './classes/PokerPlayer';
 
 /* istanbul ignore next */
 export const pokerStrings = {
-  allIn: '💰 All-in',
+  allIn: '💰 All in',
   amount: (value: number | string) => `${value} 🪙`,
   call: (value: number | string) => `✅ ${value}`,
   check: '✊ Check',
@@ -57,7 +57,7 @@ export const pokerMessages = {
   },
 
   onMessage: {
-    allInIsNotAllowed: 'Ты не можешь сделать all-in',
+    allInIsNotAllowed: 'Ты не можешь сделать all in',
     betTooBig: 'У тебя нет столько денег',
     betTooSmall: 'Ставка слишком маленькая',
     callIsNotAllowed: 'Ты не можешь сделать call',
@@ -94,7 +94,7 @@ export const pokerMessages = {
   start: {
     help: md.join([
       'Вижу, ты хочешь поиграть в покер. Ну ладно, давай я расскажу тебе правила',
-      md`Эта игра схожа с ${md.link("Texas Hold'em", 'https://en.wikipedia.org/wiki/Texas_hold_%27em')}, но не полностью соответствует правилам. Отличия некритичны, сыграй несколько раундов и тебе будет понятно`,
+      md`Эта игра схожа с ${md.link('Техасский холдем', 'https://ru.wikipedia.org/wiki/%D0%A2%D0%B5%D1%85%D0%B0%D1%81%D1%81%D0%BA%D0%B8%D0%B9_%D1%85%D0%BE%D0%BB%D0%B4%D0%B5%D0%BC')}, но не полностью соответствует правилам. Отличия некритичны, сыграй несколько раундов и тебе будет понятно`,
       md`Как только игра начнется, обычная клавиатура заменится клавиатурой покера:\n\u2022 в первой строке отображаются карты, которые лежат на столе\n\u2022 во второй строке банк \u2013 сумма всех ставок за раунд\n\u2022 в третей строке твои карты и баланс\n\u2022 в четвертой строке доступные действия: ${pokerStrings.fold}, ${pokerStrings.check}, ${pokerStrings.call('Call')}, ${pokerStrings.allIn}`,
       md`Чтобы сделать ${pokerStrings.raise('Raise')}, напиши цифру в чат. Например, "100" если хочешь поставить ${pokerStrings.amount(100)}`,
     ], '\n\n'),
