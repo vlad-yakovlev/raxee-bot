@@ -25,11 +25,11 @@ export class PokerState {
 
   cardsOpened = 0;
 
-  firstPlayerIndex = 0;
+  firstPlayerIndex = -1;
 
   playersList = new PokerPlayersList([], 0);
 
-  round = 0;
+  round = -1;
 
   started = false;
 
@@ -114,6 +114,7 @@ export class PokerState {
       player.turnMade = false;
     });
 
+    this.playersList.toIndex(this.firstPlayerIndex);
     this.playersList.toNext();
     this.firstPlayerIndex = this.playersList.index;
     const small = this.playersList.current;
