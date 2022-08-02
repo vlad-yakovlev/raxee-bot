@@ -14,6 +14,14 @@ export const pokerModule = (stateDirName: string) => {
     pokerStateMiddleware(stateDirName),
   );
 
+  bot.chatType('private').command('start', async (ctx, next) => {
+    if (ctx.match === 'poker') {
+      await ctx.replyWithMarkdown(pokerMessages.start.help);
+    } else {
+      await next();
+    }
+  });
+
   bot.chatType(['group', 'supergroup']).command('poker_reg', async (ctx) => {
     if (!ctx.from) {
       throw new Error('ctx.from is empty');
@@ -21,56 +29,56 @@ export const pokerModule = (stateDirName: string) => {
 
     if (ctx.pokerRootState.lobbyByUser) {
       if (ctx.pokerRootState.lobbyByUser === ctx.pokerRootState.lobbyByGroup) {
-        await ctx.replyWithMarkdown(pokerMessages.register.duplicateSameChat, { reply_to_message_id: ctx.message?.message_id });
+        await ctx.replyWithMarkdown(pokerMessages.pokerReg.duplicateSameChat, { reply_to_message_id: ctx.message?.message_id });
       } else {
-        await ctx.replyWithMarkdown(pokerMessages.register.duplicateOtherChat, { reply_to_message_id: ctx.message?.message_id });
+        await ctx.replyWithMarkdown(pokerMessages.pokerReg.duplicateOtherChat, { reply_to_message_id: ctx.message?.message_id });
       }
 
       return;
     }
 
     if (ctx.pokerState.started) {
-      await ctx.replyWithMarkdown(pokerMessages.register.alreadyStarted, { reply_to_message_id: ctx.message?.message_id });
+      await ctx.replyWithMarkdown(pokerMessages.pokerReg.alreadyStarted, { reply_to_message_id: ctx.message?.message_id });
       return;
     }
 
     if (ctx.pokerState.players.length >= 10) {
-      await ctx.replyWithMarkdown(pokerMessages.register.tooMany, { reply_to_message_id: ctx.message?.message_id });
+      await ctx.replyWithMarkdown(pokerMessages.pokerReg.tooMany, { reply_to_message_id: ctx.message?.message_id });
       return;
     }
 
     ctx.pokerRootState.addUserToLobby();
     ctx.pokerState.players.push(new PokerPlayer(ctx, ctx.from));
 
-    await ctx.replyWithMarkdown(pokerMessages.register.registered, { reply_to_message_id: ctx.message?.message_id });
+    await ctx.replyWithMarkdown(pokerMessages.pokerReg.registered, { reply_to_message_id: ctx.message?.message_id });
   });
 
   bot.chatType(['group', 'supergroup']).command('poker_start', async (ctx) => {
     if (ctx.pokerState.started) {
-      await ctx.replyWithMarkdown(pokerMessages.start.alreadyStarted);
+      await ctx.replyWithMarkdown(pokerMessages.pokerStart.alreadyStarted);
       return;
     }
 
     if (ctx.pokerState.players.length < 2) {
-      await ctx.replyWithMarkdown(pokerMessages.start.tooFew);
+      await ctx.replyWithMarkdown(pokerMessages.pokerStart.tooFew);
       return;
     }
 
     await ctx.pokerState.dealCards();
-    await ctx.replyWithMarkdown(pokerMessages.start.started);
+    await ctx.replyWithMarkdown(pokerMessages.pokerStart.started);
   });
 
   bot.chatType(['group', 'supergroup']).command('poker_stop', async (ctx) => {
     const isStarted = ctx.pokerState.started;
     await ctx.pokerState.finishGame();
-    await ctx.replyWithMarkdown(isStarted ? pokerMessages.stopGroup.stopped : pokerMessages.stopGroup.cancelled);
+    await ctx.replyWithMarkdown(isStarted ? pokerMessages.pokerStopGroup.stopped : pokerMessages.pokerStopGroup.cancelled);
   });
 
   bot.chatType('private').command('poker_stop', async (ctx) => {
     if (ctx.pokerRootState.lobbyByUser) {
       await ctx.pokerState.finishGame();
     } else {
-      await ctx.replyWithMarkdown(pokerMessages.stopPrivate.notFound);
+      await ctx.replyWithMarkdown(pokerMessages.pokerStopPrivate.notFound);
     }
   });
 

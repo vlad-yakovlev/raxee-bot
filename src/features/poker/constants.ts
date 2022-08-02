@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import * as R from 'remeda';
 import { md } from 'telegram-md';
 
@@ -9,10 +10,12 @@ import { PokerPlayer } from './classes/PokerPlayer';
 /* istanbul ignore next */
 export const pokerStrings = {
   allIn: '💰 All-in',
-  call: (amount: number) => `✅ ${amount}`,
+  amount: (value: number | string) => `${value} 🪙`,
+  call: (value: number | string) => `✅ ${value}`,
   check: '✊ Check',
   fold: '❌ Fold',
   preFlop: 'Префлоп',
+  raise: (value: number | string) => `⏫ ${value}`,
   win: '🏆 Win',
 };
 
@@ -34,19 +37,19 @@ export const pokerMessages = {
     ], '\n\n'),
     roundStarted: (players: PokerPlayer[], big: PokerPlayer, small: PokerPlayer) => md.join([
       md.bold('Играют'),
-      ...players.map((player) => md`${getMention(player.user)} (${player.balance + player.bet} 🪙)`),
+      ...players.map((player) => md`${getMention(player.user)} (${pokerStrings.amount(player.balance + player.bet)})`),
       '',
       md.bold('Big blind'),
       md.join([
         getMention(big.user),
-        `(${big.bet} 🪙)`,
+        `(${pokerStrings.amount(big.bet)})`,
         big.balance === 0 && pokerStrings.allIn,
       ].filter(R.isTruthy), ' '),
       '',
       md.bold('Small blind'),
       md.join([
         getMention(small.user),
-        `(${small.bet} 🪙)`,
+        `(${pokerStrings.amount(small.bet)})`,
         small.balance === 0 && pokerStrings.allIn,
       ].filter(R.isTruthy), ' '),
     ], '\n'),
@@ -65,27 +68,36 @@ export const pokerMessages = {
     wrongTurn: 'Сейчас не твой ход, но я всем передал',
   },
 
-  register: {
+  pokerReg: {
     alreadyStarted: 'Игра в этом чате уже началась',
     duplicateOtherChat: 'Ты уже в игре в другом чате',
     duplicateSameChat: 'Ты уже в игре в этом чате',
-    registered: md`Готовься, ты в игре. Чтобы я смог с тобой общаться, ${md.link('начни чат со мной', 'https://t.me/raxee_bot')}`,
+    registered: md`Готовься, ты в игре. Чтобы я смог с тобой общаться, ${md.link('начни чат со мной', 'https://t.me/raxee_test_bot?start=poker')}`,
     tooMany: 'Слишком много игроков в этом чате',
   },
 
-  start: {
+  pokerStart: {
     alreadyStarted: 'Игра уже началась, дождись ее окончания',
     started: md`Го в ${md.link('ЛС', 'https://t.me/raxee_bot')}, игра началась`,
     tooFew: 'Слишком мало игроков, добавляйтесь через /poker_reg',
   },
 
-  stopGroup: {
+  pokerStopGroup: {
     cancelled: 'Игра в этом чате отменена',
     stopped: 'Игра в этом чате остановлена',
   },
 
-  stopPrivate: {
+  pokerStopPrivate: {
     notFound: 'Ты не в игре',
+  },
+
+  start: {
+    help: md.join([
+      'Вижу, ты хочешь поиграть в покер. Ну ладно, давай я расскажу тебе правила',
+      md`Эта игра схожа с ${md.link("Texas Hold'em", 'https://en.wikipedia.org/wiki/Texas_hold_%27em')}, но не полностью соответствует правилам. Отличия некритичны, сыграй несколько раундов и тебе будет понятно`,
+      md`Как только игра начнется, обычная клавиатура заменится клавиатурой покера:\n\u2022 в первой строке отображаются карты, которые лежат на столе\n\u2022 во второй строке банк \u2013 сумма всех ставок за раунд\n\u2022 в третей строке твои карты и баланс\n\u2022 в четвертой строке доступные действия: ${pokerStrings.fold}, ${pokerStrings.check}, ${pokerStrings.call('Call')}, ${pokerStrings.allIn}`,
+      md`Чтобы сделать ${pokerStrings.raise('Raise')}, напиши цифру в чат. Например, "100" если хочешь поставить ${pokerStrings.amount(100)}`,
+    ], '\n\n'),
   },
 };
 
