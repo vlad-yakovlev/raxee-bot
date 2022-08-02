@@ -14,7 +14,7 @@ import { PokerPlayersList, PokerPlayersListRaw } from './PokerPlayersList';
 export interface PokerStateRaw {
   cards: PokerCardRaw[];
   cardsOpened: number;
-  firstPlayerIndex: number;
+  dealerIndex: number;
   playersList: PokerPlayersListRaw;
   round: number;
   started: boolean;
@@ -25,7 +25,7 @@ export class PokerState {
 
   cardsOpened = 0;
 
-  firstPlayerIndex = -1;
+  dealerIndex = 0;
 
   playersList = new PokerPlayersList([], 0);
 
@@ -39,7 +39,7 @@ export class PokerState {
     const instance = new PokerState(ctx);
     instance.cards = raw.cards.map((rawCard) => PokerCard.fromRaw(rawCard));
     instance.cardsOpened = raw.cardsOpened;
-    instance.firstPlayerIndex = raw.firstPlayerIndex;
+    instance.dealerIndex = raw.dealerIndex;
     instance.playersList = PokerPlayersList.fromRaw(ctx, raw.playersList);
     instance.round = raw.round;
     instance.started = raw.started;
@@ -50,7 +50,7 @@ export class PokerState {
     return {
       cards: this.cards.map((card) => card.toRaw()),
       cardsOpened: this.cardsOpened,
-      firstPlayerIndex: this.firstPlayerIndex,
+      dealerIndex: this.dealerIndex,
       playersList: this.playersList.toRaw(),
       round: this.round,
       started: this.started,
@@ -114,9 +114,12 @@ export class PokerState {
       player.turnMade = false;
     });
 
-    this.playersList.toIndex(this.firstPlayerIndex);
+    this.playersList.toIndex(this.dealerIndex);
     this.playersList.toNext();
-    this.firstPlayerIndex = this.playersList.index;
+    const dealer = this.playersList.current;
+    this.dealerIndex = this.playersList.index;
+
+    this.playersList.toNext();
     const small = this.playersList.current;
     this.playersList.toNext();
     const big = this.playersList.current;
@@ -125,7 +128,7 @@ export class PokerState {
     big.increaseBet(this.baseBet * 2);
     small.increaseBet(this.baseBet);
 
-    await this.broadcastMessage(pokerMessages._.roundStarted(this.playersList.players.filter((player) => !player.lost), big, small));
+    await this.broadcastMessage(pokerMessages._.roundStarted(this.playersList.players.filter((player) => !player.lost), dealer, small, big));
     await this.setKeyboards();
   }
 
@@ -182,7 +185,7 @@ export class PokerState {
       });
 
       this.cardsOpened += this.cardsOpened ? 1 : 3;
-      this.playersList.toIndex(this.firstPlayerIndex - 1);
+      this.playersList.toIndex(this.dealerIndex);
     }
 
     this.playersList.toNext();

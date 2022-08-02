@@ -8,7 +8,7 @@ describe('#fromRaw', () => {
     const state = PokerState.fromRaw({} as any, {
       cards: [{ suit: 0, value: 1 }, { suit: 1, value: 2 }, { suit: 2, value: 3 }],
       cardsOpened: 2,
-      firstPlayerIndex: 3,
+      dealerIndex: 3,
       playersList: {
         index: 13,
         players: [
@@ -38,7 +38,7 @@ describe('#fromRaw', () => {
 
     expect(state.cards).toStrictEqual([new PokerCard(0, 1), new PokerCard(1, 2), new PokerCard(2, 3)]);
     expect(state.cardsOpened).toBe(2);
-    expect(state.firstPlayerIndex).toBe(3);
+    expect(state.dealerIndex).toBe(3);
     expect(state.playersList).toStrictEqual(new PokerPlayersList([
       (() => {
         const player = new PokerPlayer({} as any, { id: 123 } as any);
@@ -71,7 +71,7 @@ describe('#toRaw', () => {
     const state = new PokerState({} as any);
     state.cards = [new PokerCard(0, 1), new PokerCard(1, 2), new PokerCard(2, 3)];
     state.cardsOpened = 2;
-    state.firstPlayerIndex = 3;
+    state.dealerIndex = 3;
     state.playersList = new PokerPlayersList([
       (() => {
         const player = new PokerPlayer({} as any, { id: 123 } as any);
@@ -100,7 +100,7 @@ describe('#toRaw', () => {
     expect(state.toRaw()).toStrictEqual({
       cards: [{ suit: 0, value: 1 }, { suit: 1, value: 2 }, { suit: 2, value: 3 }],
       cardsOpened: 2,
-      firstPlayerIndex: 3,
+      dealerIndex: 3,
       playersList: {
         index: 13,
         players: [
