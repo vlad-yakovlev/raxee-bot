@@ -8,8 +8,7 @@
     "compile": "tsc --noEmit",
     "lint": "eslint --ext .js,.ts .",
     "test": "jest --coverage",
-    "test:ci": "jest",
-    "sublime-importer": "ts-node src/bin/sublime-importer.ts"
+    "test:ci": "jest"
   },
   "dependencies": {
     "@grammyjs/storage-file": "^2.0.0",
