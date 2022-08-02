@@ -100,7 +100,7 @@ export class PokerPlayer {
         : [pokerStrings.preFlop],
       [`Банк: ${this.ctx.pokerState.bankAmount} 🪙`],
       !this.lost && [...this.cards.map(String), `${this.balance} 🪙`],
-      this === this.ctx.pokerState.activePlayer && [
+      this === this.ctx.pokerState.playersList.current && [
         this.canFold && pokerStrings.fold,
         this.canCheck && pokerStrings.check,
         this.canCall && pokerStrings.call(this.callAmount),
@@ -122,7 +122,7 @@ export class PokerPlayer {
 
   async setKeyboard() {
     await this.sendMessage(
-      pokerMessages._.userTurn(this.ctx.pokerState.activePlayer),
+      pokerMessages._.userTurn(this.ctx.pokerState.playersList.current),
       true,
     );
   }

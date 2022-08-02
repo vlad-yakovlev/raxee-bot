@@ -8,30 +8,28 @@ import { PokerContext } from '../types';
 import { getPokerCombinations } from '../utils/getPokerCombinations';
 
 import { PokerCard, PokerCardRaw } from './PokerCard';
-import { PokerPlayer, PokerPlayerRaw } from './PokerPlayer';
+import { PokerPlayer } from './PokerPlayer';
+import { PokerPlayersList, PokerPlayersListRaw } from './PokerPlayersList';
 
 export interface PokerStateRaw {
-  activePlayerIndex: number;
   cards: PokerCardRaw[];
   cardsOpened: number;
   firstPlayerIndex: number;
-  players: PokerPlayerRaw[];
+  playersList: PokerPlayersListRaw;
   round: number;
   started: boolean;
 }
 
 export class PokerState {
-  activePlayerIndex = 0;
-
   cards: PokerCard[] = [];
 
   cardsOpened = 0;
 
-  firstPlayerIndex = -1;
+  firstPlayerIndex = 0;
 
-  players: PokerPlayer[] = [];
+  playersList = new PokerPlayersList([], 0);
 
-  round = -1;
+  round = 0;
 
   started = false;
 
@@ -39,11 +37,10 @@ export class PokerState {
 
   static fromRaw(ctx: PokerContext, raw: PokerStateRaw) {
     const instance = new PokerState(ctx);
-    instance.activePlayerIndex = raw.activePlayerIndex;
     instance.cards = raw.cards.map((rawCard) => PokerCard.fromRaw(rawCard));
     instance.cardsOpened = raw.cardsOpened;
     instance.firstPlayerIndex = raw.firstPlayerIndex;
-    instance.players = raw.players.map((rawPlayer) => PokerPlayer.fromRaw(ctx, rawPlayer));
+    instance.playersList = PokerPlayersList.fromRaw(ctx, raw.playersList);
     instance.round = raw.round;
     instance.started = raw.started;
     return instance;
@@ -51,26 +48,17 @@ export class PokerState {
 
   toRaw(): PokerStateRaw {
     return {
-      activePlayerIndex: this.activePlayerIndex,
       cards: this.cards.map((card) => card.toRaw()),
       cardsOpened: this.cardsOpened,
       firstPlayerIndex: this.firstPlayerIndex,
-      players: this.players.map((player) => player.toRaw()),
+      playersList: this.playersList.toRaw(),
       round: this.round,
       started: this.started,
     };
   }
 
-  getPlayerByUserId(userId: number) {
-    return this.players.find((player) => player.user.id === userId);
-  }
-
-  get activePlayer() {
-    return this.players[this.activePlayerIndex];
-  }
-
   get bankAmount() {
-    return this.players.reduce((sum, player) => sum + player.bet, 0);
+    return this.playersList.players.reduce((sum, player) => sum + player.bet, 0);
   }
 
   get baseBet() {
@@ -78,11 +66,11 @@ export class PokerState {
   }
 
   get topBet() {
-    return Math.max(...this.players.map((player) => player.bet));
+    return Math.max(...this.playersList.players.map((player) => player.bet));
   }
 
   get isAllIn() {
-    return this.players.some((player) => !player.lost && player.balance === 0);
+    return this.playersList.players.some((player) => !player.lost && player.balance === 0);
   }
 
   get boardCombinations() {
@@ -90,26 +78,17 @@ export class PokerState {
   }
 
   get topWeight() {
-    return Math.max(...this.players.map((player) => (!player.lost && !player.folded && player.topCombination ? player.topCombination.weight : -1)));
+    return Math.max(...this.playersList.players.map((player) => (!player.lost && !player.folded && player.topCombination ? player.topCombination.weight : -1)));
   }
 
-  getNextPlayerIndex(index: number, checkBalance = false) {
-    do {
-      index += 1;
-      index %= this.players.length;
-    } while (this.players[index].lost || this.players[index].folded || (checkBalance && this.players[index].balance === 0));
-
-    return index;
-  }
-
-  async broadcastMessage(message: string | Markdown, players = this.players) {
+  async broadcastMessage(message: string | Markdown, players = this.playersList.players) {
     await Promise.all(players.map((player) => player.sendMessage(message)));
   }
 
   async broadcastPlayerMessage(player: PokerPlayer, message: string) {
     const fullMessage = pokerMessages._.playerMessage(player, message);
 
-    await Promise.all(this.players.map(async (p) => {
+    await Promise.all(this.playersList.players.map(async (p) => {
       if (player !== p) {
         await p.sendMessage(fullMessage);
       }
@@ -117,7 +96,7 @@ export class PokerState {
   }
 
   async setKeyboards() {
-    await Promise.all(this.players.map((player) => player.setKeyboard()));
+    await Promise.all(this.playersList.players.map((player) => player.setKeyboard()));
   }
 
   async dealCards() {
@@ -128,30 +107,31 @@ export class PokerState {
     this.cards = deck.splice(0, 5);
     this.cardsOpened = 0;
 
-    this.players.forEach((player) => {
+    this.playersList.players.forEach((player) => {
       player.bet = 0;
       player.cards = deck.splice(0, 2);
       player.folded = false;
       player.turnMade = false;
     });
 
-    this.firstPlayerIndex = this.getNextPlayerIndex(this.firstPlayerIndex);
-    this.activePlayerIndex = this.firstPlayerIndex;
-
-    const big = this.players[this.firstPlayerIndex];
-    const small = this.players[this.getNextPlayerIndex(this.firstPlayerIndex)];
+    this.playersList.toNext();
+    this.firstPlayerIndex = this.playersList.index;
+    const small = this.playersList.current;
+    this.playersList.toNext();
+    const big = this.playersList.current;
+    this.playersList.toNext();
 
     big.increaseBet(this.baseBet * 2);
     small.increaseBet(this.baseBet);
 
-    await this.broadcastMessage(pokerMessages._.roundStarted(this.players.filter((player) => !player.lost), big, small));
+    await this.broadcastMessage(pokerMessages._.roundStarted(this.playersList.players.filter((player) => !player.lost), big, small));
     await this.setKeyboards();
   }
 
   async finishGame() {
     await this.broadcastMessage(pokerMessages._.gameFinished);
 
-    await Promise.all(this.players.map(async (player) => {
+    await Promise.all(this.playersList.players.map(async (player) => {
       await this.ctx?.api.sendSticker(player.user.id, getRandomItem(pokerStickers), { reply_markup: { remove_keyboard: true } });
     }));
 
@@ -160,12 +140,12 @@ export class PokerState {
   }
 
   async finishRound() {
-    await this.broadcastMessage(pokerMessages._.roundFinished(this.cards, this.players.filter((player) => !player.lost)));
+    await this.broadcastMessage(pokerMessages._.roundFinished(this.cards, this.playersList.players.filter((player) => !player.lost)));
 
-    const winnersCount = this.players.reduce((acc, player) => (player.win ? acc + 1 : acc), 0);
+    const winnersCount = this.playersList.players.reduce((acc, player) => (player.win ? acc + 1 : acc), 0);
     const winAmount = this.bankAmount / winnersCount;
 
-    this.players.forEach((player) => {
+    this.playersList.players.forEach((player) => {
       if (player.win) {
         player.balance += winAmount;
       }
@@ -175,7 +155,7 @@ export class PokerState {
       }
     });
 
-    if (this.players.filter((player) => !player.lost).length < 2) {
+    if (this.playersList.players.filter((player) => !player.lost).length < 2) {
       await this.finishGame();
     } else {
       await this.dealCards();
@@ -183,27 +163,27 @@ export class PokerState {
   }
 
   async nextTurn() {
-    this.activePlayer.turnMade = true;
+    this.playersList.current.turnMade = true;
 
-    if (this.players.filter((player) => !player.lost && !player.folded).length < 2) {
+    if (this.playersList.players.filter((player) => !player.lost && !player.folded).length < 2) {
       await this.finishRound();
       return;
     }
 
-    if (this.players.every((player) => player.lost || player.folded || player.balance === 0 || (player.turnMade && player.bet === this.topBet))) {
+    if (this.playersList.players.every((player) => player.lost || player.folded || player.balance === 0 || (player.turnMade && player.bet === this.topBet))) {
       if (this.cardsOpened === 5 || this.isAllIn) {
         await this.finishRound();
         return;
       }
 
-      this.players.forEach((player) => {
+      this.playersList.players.forEach((player) => {
         player.turnMade = false;
       });
 
       this.cardsOpened += this.cardsOpened ? 1 : 3;
-      this.activePlayerIndex = this.getNextPlayerIndex(this.firstPlayerIndex - 1);
+      this.playersList.toIndex(this.firstPlayerIndex);
     } else {
-      this.activePlayerIndex = this.getNextPlayerIndex(this.activePlayerIndex);
+      this.playersList.toNext();
     }
 
     await this.setKeyboards();
@@ -212,18 +192,18 @@ export class PokerState {
   async handleMessage(player: PokerPlayer, message: string) {
     switch (message) {
       case pokerStrings.fold: {
-        if (!this.activePlayer.canFold) {
+        if (!this.playersList.current.canFold) {
           return pokerMessages.onMessage.foldIsNotAllowed;
         }
 
-        this.activePlayer.folded = true;
+        this.playersList.current.folded = true;
         await this.broadcastPlayerMessage(player, message);
         await this.nextTurn();
         break;
       }
 
       case pokerStrings.check: {
-        if (!this.activePlayer.canCheck) {
+        if (!this.playersList.current.canCheck) {
           return pokerMessages.onMessage.checkIsNotAllowed;
         }
 
@@ -232,23 +212,23 @@ export class PokerState {
         break;
       }
 
-      case pokerStrings.call(this.activePlayer.callAmount): {
-        if (!this.activePlayer.canCall) {
+      case pokerStrings.call(this.playersList.current.callAmount): {
+        if (!this.playersList.current.canCall) {
           return pokerMessages.onMessage.callIsNotAllowed;
         }
 
-        this.activePlayer.increaseBet(this.activePlayer.callAmount);
+        this.playersList.current.increaseBet(this.playersList.current.callAmount);
         await this.broadcastPlayerMessage(player, message);
         await this.nextTurn();
         break;
       }
 
       case pokerStrings.allIn: {
-        if (!this.activePlayer.canAllIn) {
+        if (!this.playersList.current.canAllIn) {
           return pokerMessages.onMessage.allInIsNotAllowed;
         }
 
-        this.activePlayer.increaseBet(this.activePlayer.balance);
+        this.playersList.current.increaseBet(this.playersList.current.balance);
         await this.broadcastPlayerMessage(player, message);
         await this.nextTurn();
         break;
@@ -262,19 +242,19 @@ export class PokerState {
           return pokerMessages.onMessage.unknownCommand;
         }
 
-        if (!this.activePlayer.canRaise) {
+        if (!this.playersList.current.canRaise) {
           return pokerMessages.onMessage.raiseIsNotAllowed;
         }
 
-        if (betAmount >= this.activePlayer.balance) {
+        if (betAmount >= this.playersList.current.balance) {
           return pokerMessages.onMessage.betTooBig;
         }
 
-        if (betAmount < this.activePlayer.callAmount + this.baseBet) {
+        if (betAmount < this.playersList.current.callAmount + this.baseBet) {
           return pokerMessages.onMessage.betTooSmall;
         }
 
-        this.activePlayer.increaseBet(betAmount);
+        this.playersList.current.increaseBet(betAmount);
         await this.broadcastPlayerMessage(player, message);
         await this.nextTurn();
       }

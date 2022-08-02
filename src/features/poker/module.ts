@@ -42,13 +42,13 @@ export const pokerModule = (stateDirName: string) => {
       return;
     }
 
-    if (ctx.pokerState.players.length >= 10) {
+    if (ctx.pokerState.playersList.size >= 10) {
       await ctx.replyWithMarkdown(pokerMessages.pokerReg.tooMany, { reply_to_message_id: ctx.message?.message_id });
       return;
     }
 
     ctx.pokerRootState.addUserToLobby();
-    ctx.pokerState.players.push(new PokerPlayer(ctx, ctx.from));
+    ctx.pokerState.playersList.add(new PokerPlayer(ctx, ctx.from));
 
     await ctx.replyWithMarkdown(pokerMessages.pokerReg.registered, { reply_to_message_id: ctx.message?.message_id });
   });
@@ -59,7 +59,7 @@ export const pokerModule = (stateDirName: string) => {
       return;
     }
 
-    if (ctx.pokerState.players.length < 2) {
+    if (ctx.pokerState.playersList.size < 2) {
       await ctx.replyWithMarkdown(pokerMessages.pokerStart.tooFew);
       return;
     }
@@ -84,10 +84,10 @@ export const pokerModule = (stateDirName: string) => {
 
   bot.chatType('private').on('message:text', async (ctx, next) => {
     if (ctx.pokerRootState.lobbyByUser) {
-      const player = ctx.pokerState.getPlayerByUserId(ctx.from.id)!;
+      const player = ctx.pokerState.playersList.getPlayerByUserId(ctx.from.id)!;
       const message = ctx.message?.text || '';
 
-      if (ctx.from.id === ctx.pokerState.activePlayer.user.id) {
+      if (ctx.from.id === ctx.pokerState.playersList.current.user.id) {
         const reply = await ctx.pokerState.handleMessage(player, message);
 
         if (reply) {
