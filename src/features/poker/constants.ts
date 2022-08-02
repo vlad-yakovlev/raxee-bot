@@ -58,7 +58,7 @@ export const pokerMessages = {
 
   onMessage: {
     allInIsNotAllowed: 'Ты не можешь сделать all in',
-    betTooBig: 'У тебя нет столько денег',
+    betTooBig: 'Ставка слишком большая',
     betTooSmall: 'Ставка слишком маленькая',
     callIsNotAllowed: 'Ты не можешь сделать call',
     checkIsNotAllowed: 'Ты не можешь сделать check',
