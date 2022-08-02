@@ -72,7 +72,7 @@ export const pokerMessages = {
     alreadyStarted: 'Игра в этом чате уже началась',
     duplicateOtherChat: 'Ты уже в игре в другом чате',
     duplicateSameChat: 'Ты уже в игре в этом чате',
-    registered: md`Готовься, ты в игре. Чтобы я смог с тобой общаться, ${md.link('начни чат со мной', 'https://t.me/raxee_test_bot?start=poker')}`,
+    registered: md`Готовься, ты в игре. Чтобы я смог с тобой общаться, ${md.link('начни чат со мной', 'https://t.me/raxee_bot?start=poker')}`,
     tooMany: 'Слишком много игроков в этом чате',
   },
 
